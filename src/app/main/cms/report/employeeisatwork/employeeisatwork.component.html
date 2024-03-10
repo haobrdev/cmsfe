@@ -1,0 +1,100 @@
+<div class="app-main-content">
+    <div class="app-container">
+      <div class="app-toolbar">
+        <div class="card card-content">
+          <div class="card-main-header">
+            <img src="/assets/images/list-icon.png" />
+            <span class="card-main-title">THỐNG KÊ NHÂN VIÊN ĐANG Ở TRONG CƠ QUAN</span>
+          </div>
+  
+          <div class="row full-width">
+            <h5 class="title">Tìm kiếm</h5>
+            <div class="card card-content-design">
+              <div class="main-toolbar">
+                <div class="row">
+                  <div class="col-sm-12 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+  
+                    <div class="col-sm-3">
+                        <div class="e-float-input">
+                            <input class="searchText" type="text" id="text" name="text" [placeholder]="'Nhập họ tên nhân viên'"
+                                [(ngModel)]="search.full_name" [ngModelOptions]="{ standalone: true }"
+                                (keypress)="searchListEnter($event)" />
+                                <label class="e-float-text" for="text">Họ tên nhân viên</label>
+                        </div>
+                      
+                    </div>
+                     <div class="col-sm-8">
+
+                     </div>
+                    <div class="col-sm-1 p-n">
+                      <div class="form-group">
+                        <div class="e-float-input m-t-0 bg">
+                          <button class="btn btn-search" (click)="getListData()">
+                            Tìm kiếm
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                     
+                  </div>
+                </div>
+            </div>
+  
+          </div>
+        </div>
+
+          <div class="row full-width">
+            <div class="col-sm-12 main-toolbar">
+              <button id="export_excel" class="btn-action btn btn-action btn-blue" (click)="exportData()"
+                *ngFor="let itemButton of toolbar" [disabled]="itemButton.isDisable === true">
+                <span><i class="fa {{ itemButton.prefixIcon }}"></i></span>
+                <span class="text-center">{{ itemButton.text }}</span>
+              </button>
+            </div>
+          </div>
+  
+          <div class="card-main-content">
+            <div class="list-grid">
+              <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+                [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+                [height]="configs.height()" [allowSorting]="false" allowResizing="true" [locale]="configs.currentLang"
+                [allowSelection]="true" [showColumnChooser]="false" [selectionSettings]="configs.selectionSettings"
+                [allowFiltering]="false" (dataStateChange)="dataStateChange($event)"
+                [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+                (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)" [allowTextWrap]="true"
+                [textWrapSettings]="configs.wrapSettings">
+                <e-columns>
+                  <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                    [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                  <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                    width="20">
+                    <ng-template #template let-data>
+                      <span>{{ formatStt(data.index) }}</span>
+                    </ng-template>
+                  </e-column>
+                  <e-column field="full_name" textAlign="Left" headerTextAlign="Center" headerText="Họ tên nhân viên" width="80">
+                  </e-column>
+                  <e-column field="job_title_name" textAlign="Left" headerTextAlign="Center" headerText="Chức vụ"
+                    width="50">
+                  </e-column>
+                  <e-column field="department_name" textAlign="Left"  headerTextAlign="Center"
+                    headerText="Phòng ban" width="80">
+                  </e-column>
+                  <e-column field="time_in_tostring" textAlign="Center"  headerTextAlign="Center"
+                    headerText="Thời gian vào" width="50">
+                  </e-column>
+                  <e-column field="license_no" textAlign="Left"  headerTextAlign="Center"
+                    headerText="Biển số xe" width="50">
+                  </e-column>
+                  <e-column field="vehicle_name" textAlign="Left"  headerTextAlign="Center"
+                    headerText="Loại phương tiện" width="50">
+                  </e-column>
+                </e-columns>
+              </ejs-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 

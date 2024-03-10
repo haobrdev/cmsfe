@@ -1,0 +1,464 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI NGƯỜI DÙNG HỆ THỐNG</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">SỬA NGƯỜI DÙNG HỆ THỐNG</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">XEM NGƯỜI DÙNG HỆ THỐNG</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <!-- <div class="col-sm-2 text-center flex-img-center">
+                <div class="image" style="position: relative">
+                  <img style="width: 150px; height: 150px" class="full-width" alt="addPicture" [src]="avatar"
+                    onclick="javascript:document.getElementById('avatar').click();" />
+                  <span *ngIf="
+                      avatar &&
+                      avatar !== '/assets/images/addPicture.png' &&
+                      flagState != 'view'
+                    " style="
+                      position: absolute;
+                      top: 0px;
+                      cursor: pointer;
+                    "><i class="fa fa-remove" (click)="removeImage('avatar')"></i></span>
+                  <label class="e-float-text" style="position: relative; top: 50px !important" for="">Ảnh đại
+                    diện</label>
+                </div>
+                <div class="custom-file mt-15" style="display: none">
+                  <input style="font-size: 13px" #file type="file" id="avatar" accept=".png, .jpg, .jpe"
+                    [disabled]="flagState === 'view'" (change)="uploadAvatar(file.files)" style="display: none" />
+                </div>
+              </div> -->
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Đơn vị/Phòng ban -->
+                  <div class="col-sm-8">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <!-- <ejs-dropdownlist id="org_id" [dataSource]="lstOrgs" [placeholder]="'Chọn đơn vị/phòng ban'"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.org_id" formControlName="org_id"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstOrgs)">
+                        </ejs-dropdownlist> -->
+                        <ejs-dropdownlist id='org_id' #orgDroplist (open)='onOpenChooseOrg()' [(ngModel)]="model.org_id"
+                          formControlName="org_id" title="{{ model && model.org_name ? model.org_name : '' }}">
+                          <ng-template #noRecordsTemplate>
+                            <div id='tree'></div>
+                          </ng-template>
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="org_id">Đơn vị/Phòng ban</label>
+                        <span class="input-error"
+                          *ngIf=" editForm.get('org_id').hasError('required') && !editForm.get('org_id').untouched">
+                          Trường Đơn vị/Phòng ban bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Chức danh -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="title_id" [dataSource]="lstTitles" [placeholder]="'Chọn chức danh'"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.title_id"
+                          formControlName="title_id" [allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstTitles)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="title_id">Chức danh</label>
+                        <span class="input-error"
+                          *ngIf=" editForm.get('title_id').hasError('required') && !editForm.get('title_id').untouched">
+                          Trường Chức danh bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Tên -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="full_name" name="full_name" formControlName="full_name"
+                          [(ngModel)]="model.full_name" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="full_name">Họ và tên</label>
+                        <span class="input-error"
+                          *ngIf=" editForm.get('full_name').hasError('required') && !editForm.get('full_name').untouched">
+                          Trường Họ và tên bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf=" editForm.get('full_name').hasError('maxlength') && !editForm.get('full_name').untouched">
+                          Họ và tên không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Ngày sinh -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-datepicker id="birth_date" name="birth_date" formControlName="birth_date"
+                          [(ngModel)]="model.birth_date" format="dd/MM/yyyy"></ejs-datepicker>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="birth_date">Ngày sinh</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!--End-->
+
+                  <!--Giới tính-->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="gender_id" [dataSource]="lstGenders" [placeholder]="'Chọn giới tính'"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.gender_id"
+                          formControlName="gender_id" [allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstGenders)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="gender_id">Giới tính</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Điện thoại -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="phone" name="phone" formControlName="phone" [(ngModel)]="model.phone"
+                          (blur)="checkPhoneNumber('phone')" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="phone">Số điện thoại</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('phone').hasError('required') && !editForm.get('phone').untouched">
+                          Trường Số điện thoại bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('phone').hasError('incorrect') && !editForm.get('phone').untouched">
+                          Trường Số điện thoại không hợp lệ
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--End-->
+                  <!-- Điện thoại cơ quan -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="work_phone" name="work_phone" formControlName="work_phone"
+                          [(ngModel)]="model.work_phone" (blur)="checkPhoneNumber('work_phone')" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="work_phone">Số điện thoại cơ quan</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('work_phone').hasError('incorrect') && !editForm.get('work_phone').untouched">
+                          Trường Số điện thoại cơ quan không hợp lệ
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--End-->
+                  <!-- Email -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="email" name="email" formControlName="email" [(ngModel)]="model.email" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="email">Email</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('email').hasError('required') && !editForm.get('email').untouched">
+                          Trường Email bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('email').hasError('email') && !editForm.get('email').untouched">
+                          Trường Email không hợp lệ
+                        </span>
+                        <span class="input-error"
+                        *ngIf="editForm.get('email').hasError('duplicate')">
+                        Email đã tồn tại. Vui lòng nhập email khác.
+                      </span>
+
+                      </div>
+                    </div>
+                  </div>
+                  <!--End-->
+                  <!-- Tỉnh/Thành phố -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="province_id" [dataSource]="lstProvinces" [fields]="fields"
+                          [(ngModel)]="model.province_id" formControlName="province_id" [placeholder]="''"
+                          [showClearButton]="true" [allowFiltering]="true" (filtering)="onFiltering($event, lstProvinces)"
+                          (change)="changeProvince($event)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text " for="province_id">Tỉnh/Thành phố</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End -->
+                  <!-- Quận/Huyện -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="district_id" [dataSource]="lstDistricts" [fields]="fields"
+                          [(ngModel)]="model.district_id" formControlName="district_id" [placeholder]="''"
+                          [showClearButton]="true" [allowFiltering]="true" (filtering)="onFiltering($event, lstDistricts)"
+                          (change)="changeDistrict($event)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text " for="district_id">Quận/Huyện</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End -->
+                  <!-- Phường/Xã -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="ward_id" [dataSource]="lstWards" [fields]="fields"
+                          [(ngModel)]="model.ward_id" formControlName="ward_id" [placeholder]="''"
+                          [showClearButton]="true" [allowFiltering]="true" (filtering)="onFiltering($event, lstWards)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text " for="ward_id">Phường/Xã</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- End -->
+                  <!-- Địa chỉ -->
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="address" name="address" formControlName="address"
+                          [(ngModel)]="model.address" maxlength="255" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="address">Địa chỉ</label>
+                        <span class="input-error"
+                        *ngIf=" editForm.get('address').hasError('required') && !editForm.get('address').untouched">
+                        Trường Địa chỉ bắt buộc nhập
+                      </span>
+                      <span class="input-error"
+                        *ngIf=" editForm.get('address').hasError('maxlength') && !editForm.get('address').untouched">
+                        Địa chỉ không được vượt quá 255 ký tự
+                      </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Tài khoản -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="username" name="username" formControlName="username"
+                          [(ngModel)]="model.username" maxlength="255"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="username">Tài khoản</label>
+                        <span class="input-error"
+                          *ngIf=" editForm.get('username').hasError('required') && !editForm.get('username').untouched">
+                          Trường Tài khoản bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('username').hasError('maxlength') && !editForm.get('username').untouched">
+                          Tài khoản không được vượt quá 255 ký tự
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('username').hasError('duplicate')">
+                          Tài khoản đã tồn tại. Vui lòng nhập tài khoản khác.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-8" *ngIf="flagState != 'new'"></div>
+                  <!-- MK -->
+                  <div class="col-sm-4" *ngIf="flagState == 'new'">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="password" id="password" name="password" formControlName="password" maxlength="255"
+                          [(ngModel)]="model.password" (blur)="changePass()" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="password">Mật khẩu</label>
+                        <span class="input-error" *ngIf="(editForm.get('password').hasError('required') || editForm.get('password').hasError('minlength'))  &&!editForm.get('password').untouched">
+                           Mật khẩu phải có độ dài tối thiểu 8 ký tự!
+                        </span>
+                        <span class="input-error" *ngIf="editForm.get('password').hasError('pattern') &&  (!editForm.get('password').hasError('minlength')) &&!editForm.get('password').untouched">
+                          Mật khẩu phải có tối thiểu 1 chữ in hoa và số!
+                        </span>
+                        <span class="input-error" *ngIf="editForm.get('password').hasError('maxlength') && !editForm.get('password').untouched">
+                          Mật khẩu không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Xác nhận MK -->
+                  <div class="col-sm-4" *ngIf="flagState == 'new'">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="password" id="confirm_password" name="confirm_password"
+                          formControlName="confirm_password" [(ngModel)]="model.confirm_password"
+                          (blur)="changePass()" maxlength="255" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="confirm_password">Xác nhận mật khẩu</label>
+                        <span class="input-error" *ngIf="(editForm.get('confirm_password').hasError('required') || editForm.get('confirm_password').hasError('minlength'))  && !editForm.get('confirm_password').untouched">
+                           Xác nhận mật khẩu phải có độ dài tối thiểu 8 ký tự!
+                        </span>
+                        <span class="input-error" *ngIf="editForm.get('confirm_password').hasError('pattern') &&  (!editForm.get('confirm_password').hasError('minlength')) &&!editForm.get('confirm_password').untouched">
+                          Xác nhận mật khẩu phải có tối thiểu 1 chữ in hoa và số!
+                        </span>
+                        <span class="input-error" *ngIf="editForm.get('confirm_password').hasError('maxlength') && !editForm.get('confirm_password').untouched">
+                          Xác nhận mật khẩu không được vượt quá 255 ký tự
+                        </span>
+                        <span class="input-error" *ngIf="editForm.get('confirm_password').hasError('incorrect') && !editForm.get('confirm_password').untouched">
+                          Xác nhận mật khẩu không trùng với mật khẩu
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Avatar -->
+                  <div class="col-sm-4 m-t-15">
+                    <div class="image" style="position: relative">
+                      <!-- <img style="width: 150px; height: 150px" class="full-width" alt="addPicture" [src]="avatar"
+                        onclick="javascript:document.getElementById('avatar').click();" /> -->
+                      <div class="upload-file-area green"
+                        onclick="javascript:document.getElementById('avatar').click();" *ngIf="!avatar">
+                        <img src="/assets/images/upload-avatar.png" />
+                        <p>Tải ảnh đại diện</p>
+                      </div>
+                      <img *ngIf="avatar" [src]="avatar" style="width: 100%;height: 180px;margin-top: 30px;" />
+                      <span *ngIf="
+                          avatar &&
+                          avatar !== '/assets/images/addPicture.png' &&
+                          flagState != 'view'
+                        " style="
+                          position: absolute;
+                          top: 0px;
+                          cursor: pointer;
+                        "><i class="fa fa-remove" (click)="removeImage('avatar')"></i></span>
+                    </div>
+
+                    
+                    <div class="custom-file mt-15" style="display: none">
+                      <input style="font-size: 13px" #file type="file" id="avatar" accept=".png, .jpg, .jpe"
+                        [disabled]="flagState === 'view'" (change)="uploadAvatar(file.files)" style="display: none" />
+                    </div>
+                  </div>
+
+                  <div class="col-sm-2"></div>
+                  <div class="col-sm-2 m-t-15">
+
+                    <div class="form-group">
+                      <div class="e-float-input m-t-15">
+                        <ejs-checkbox label="Kích hoạt" [checked]="model.status" [(ngModel)]="model.status"
+                          formControlName="status">
+                        </ejs-checkbox>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="row br m-t-15" *ngIf="model && model.user_type && model.user_type == 12"></div>
+            <h5 class="title" *ngIf="model && model.user_type && model.user_type == 12">Quản trị đơn vị</h5>
+            <div class="row full-width" *ngIf="model && model.user_type && model.user_type == 12">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <div class="e-float-input">
+                    <ejs-multiselect #majorMultiselect id="list_org_manages" [locale]="'vi2'"
+                      [selectAllText]="selectAllText" formControlName="list_org_manages"
+                      [unSelectAllText]="unSelectAllText" [mode]="mode" showSelectAll="true" [dataSource]="lstOrgs"
+                      [showClearButton]="true" [maximumSelectionLength]="customMaximumMulti" [fields]="fields"
+                      [(ngModel)]="model.list_org_manage2s" [allowFiltering]="true"
+                      (filtering)="onFiltering($event, lstOrgs)">
+                      <ng-template #itemTemplate let-data>
+                        <span title="{{ data.name }}">
+                          {{data.name}}</span>
+                      </ng-template>
+                    </ejs-multiselect>
+                    <span class="e-float-line"></span>
+                    <label class="e-float-text required" for="list_org_manages">Đơn vị/Phòng ban</label>
+                    <span class="input-error"
+                      *ngIf="editForm.get('list_org_manages').hasError('required') && !editForm.get('list_org_manages').untouched">
+                      Trường Đơn vị/Phòng ban bắt buộc chọn
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row br m-t-15"></div>
+            <h5 class="title">Phân quyền người dùng</h5>
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <div class="e-float-input">
+                    <ejs-multiselect #majorMultiselect id="user_group_id" [locale]="'vi2'"
+                      [selectAllText]="selectAllText" formControlName="user_group_id"
+                      [unSelectAllText]="unSelectAllText" [mode]="mode" showSelectAll="true"
+                      [dataSource]="lstUserGroups" [showClearButton]="true"
+                      [maximumSelectionLength]="customMaximumMulti" [fields]="fields" [(ngModel)]="model.list_group2s"
+                      [allowFiltering]="true" (filtering)="onFiltering($event, lstUserGroups)">
+                      <ng-template #itemTemplate let-data>
+                        <span title="{{ data.name }}">
+                          {{data.name}}</span>
+                      </ng-template>
+                    </ejs-multiselect>
+
+                    <span class="e-float-line"></span>
+                    <label class="e-float-text required" for="user_group_id">Nhóm quyền người dùng <span
+                        style="color: #34A853; margin-left: 5px;">(Cho phép chọn nhiều nhóm quyền)</span></label>
+                    <span class="input-error"
+                      *ngIf="editForm.get('user_group_id').hasError('required') && !editForm.get('user_group_id').untouched">
+                      Nhóm quyền bắt buộc chọn!
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="form-group">
+                  <div class="e-float-input">
+                    <ejs-multiselect #majorMultiselect id="client_id" [locale]="'vi2'"
+                      [selectAllText]="selectAllText" formControlName="client_id"
+                      [unSelectAllText]="unSelectAllText" [mode]="mode" showSelectAll="true"
+                      [dataSource]="lstUserClients" [showClearButton]="true"
+                      [maximumSelectionLength]="customMaximumMulti" [fields]="fields" [(ngModel)]="model.list_client2s"
+                      [allowFiltering]="true" (filtering)="onFiltering($event, lstUserClients)">
+                      <ng-template #itemTemplate let-data>
+                        <span title="{{ data.checkpoint_name }}">
+                          {{data.name}}</span>
+                      </ng-template>
+                    </ejs-multiselect>
+                    <span class="e-float-line"></span>
+                    <label class="e-float-text" for="user_group_id">Phân quyền Trạm kiểm soát <span
+                        style="color: #34A853; margin-left: 5px;">(Cho phép chọn nhiều trạm kiểm soát)</span></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view' && flagEdit">Lưu thông
+                  tin</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-confirm-modal *ngIf="checkWarn" id="confirm-back-modal"  class="modal">
+  <h3>Cảnh báo</h3>
+  <div class="modal-body user-edit-modal-body">
+    <span class="user-edit-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle warning"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Thay đổi chưa lưu của bạn sẽ biến mất nếu bạn rời khỏi trang.</span> 
+  </div>
+  <div class="modal-footer user-edit-modal-footer">
+    <button class="btn btn-primary m-r-8 user-edit-btn-default" (click)="confirmBack('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default user-edit-btn-default" (click)="confirmBack('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>

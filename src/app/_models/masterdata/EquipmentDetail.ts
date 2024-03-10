@@ -1,0 +1,24 @@
+export class EquipmentDetail {
+    id?: string;
+    equipment_id?: string;
+    equipment_name?: string;
+    equipment_type: number;
+    equipment_typename?: string;
+    lane_type_header?: number;
+    lane_type?: number;
+    lane_name?: string;
+    vehicle_equipment_lane?: number;
+    is_prioritize?: boolean; 
+    is_active?: boolean;
+    seri?: string;
+    lane_id?: string;
+    description?: string;
+    ip?: string;
+    ip_port?: number;
+    account?: string;
+    pass?: string;
+    rtsp_link?: string;
+    http_link?: string;
+    extension?: string;
+    is_mode?: string;
+};

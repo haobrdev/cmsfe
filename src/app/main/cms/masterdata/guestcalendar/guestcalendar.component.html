@@ -1,0 +1,191 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-toolbar">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/list-icon.png" />
+          <span class="card-main-title">DANH SÁCH ĐĂNG KÝ LỊCH KHÁCH MỜI</span>
+        </div>
+        <div class="row full-width">
+          <h5 class="title">Tìm kiếm</h5>
+          <div class="card card-content-design">
+            <div class="main-toolbar">
+              <!-- Search -->
+              <div class="row">
+                <div class="col-sm-12 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+                  <div class="col-sm-4">
+                    <div class="e-float-input">
+                      <input class="searchText" type="text" id="invited_guest" name="invited_guest"
+                      [placeholder]="'Nhập họ tên, SĐT khách mời'" [(ngModel)]="search.invited_guest"
+                      [ngModelOptions]="{ standalone: true }" (keypress)="searchListEnter($event)"  />
+                    <label class="e-float-text" for="text">Khách mời</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="e-float-input">
+                      <input class="searchText" type="text" id="invited_person" name="invited_person"
+                        [placeholder]="'Nhập họ tên, SĐT người mời'" [(ngModel)]="search.invited_person"
+                        [ngModelOptions]="{ standalone: true }"
+                        (keypress)="searchListEnter($event)" />
+                      <label class="e-float-text" for="invited_person">Người mời</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="e-float-input">
+                        <ejs-dropdownlist id="department" [dataSource]="lstOrgs" [fields]="fieldOrgs"
+                        [(ngModel)]="search.department" [ngModelOptions]="{ standalone: true }"
+                        placeholder="Chọn giá trị" [showClearButton]="true" [allowFiltering]="true" (ngModelChange)="
+                        changeModel(search.org_level)
+                      ">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="department">Phòng ban</label>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12 p-n custom-btn-toolbar">
+                  <div class="col-sm-4">
+                    <div class="e-float-input">
+                      <ejs-dropdownlist id="status" [dataSource]="lstStatus" [fields]="fieldStatus" 
+                          [(ngModel)]="search.status" [ngModelOptions]="{ standalone: true }" (keypress)="searchListEnter($event)" 
+                          placeholder="Chọn giá trị" [showClearButton]="true" [allowFiltering]="true" (ngModelChange)="
+                          changeModel(search.org_level)
+                        ">
+                        </ejs-dropdownlist>
+                        <label class="e-float-text" for="status">Trạng thái</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="e-float-input">
+                      <ejs-datepicker id="start_date" name="start_date"
+                          [(ngModel)]="search.start_date" format="dd/MM/yyyy" placeholder=".../.../..." aria-placeholder=".../.../..." (keypress)="searchListEnter($event)" (change)="onDateChange()"></ejs-datepicker>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="start_date">Từ ngày</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="e-float-input">
+                      <ejs-datepicker id="end_date" name="end_date"
+                          [(ngModel)]="search.end_date" format="dd/MM/yyyy" placeholder=".../.../..." aria-placeholder=".../.../..." (keypress)="searchListEnter($event)" (change)="onDateChange()"></ejs-datepicker>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="end_date">Đến ngày</label>
+                    </div>
+                    <span class="input-error" *ngIf="isError">
+                      Trường Đến ngày phải lớn hơn hoặc bằng từ ngày hiện tại!
+                    </span>
+                  </div>
+                </div>
+                <!-- Button Search -->
+                <div class="col-sm-1 p-n ml-auto">
+                  <div class="form-group">
+                    <div class="e-float-input m-t-0 bg">
+                      <button class="btn btn-search" (click)="getListData()">
+                        Tìm kiếm
+                      </button>
+                  </div>
+                </div>
+              </div>
+                <!-- End Button Search -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Create -->
+        <div class="row full-width">
+          <div class="col-sm-12 main-toolbar">
+            <button id="add" class="btn-action {{ itemButton.iconColorClass }}" (click)="clickToolbar(itemButton)"
+              *ngFor="let itemButton of toolbar" [disabled]="itemButton.isDisable === true">
+              <span><i class="fa {{ itemButton.prefixIcon }}"></i></span>
+              <span class="text-center">{{ itemButton.text }}</span>
+            </button>
+          </div>
+        </div>
+        <!-- End Create -->
+        <div class="card-main-content">
+          <div class="list-grid">
+            <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+              [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+              [height]="configs.height()"  allowResizing="true" [locale]="configs.currentLang"
+              [allowSelection]="true"  [selectionSettings]="configs.selectionSettings"
+               (dataStateChange)="dataStateChange($event)"
+              [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+              (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)" [allowTextWrap]="true"
+              [textWrapSettings]="configs.wrapSettings">
+              <e-columns>
+                <e-column field="id"  [visible]="false" headerText="ID" width="130"
+                  [isPrimaryKey]="true" ></e-column>
+                <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" 
+                  width="45">
+                  <ng-template #template let-data>
+                    <span>{{ formatStt(data.index) }}</span>
+                  </ng-template>
+                </e-column>
+                <e-column field="time_regist" textAlign="Center" headerTextAlign="Center" headerText="Thời gian" width="130" class="custom-wrap">
+                </e-column>
+                <e-column field="invited_guest" textAlign="Left" headerTextAlign="Center" headerText="Khách mời" width="190">
+                </e-column>
+                <e-column field="invited_person" textAlign="Left" headerTextAlign="Center" headerText="Người mời" width="200">
+                </e-column>
+                <e-column field="department" textAlign="Left" headerTextAlign="Center" headerText="Phòng ban" width="170">
+                </e-column>
+                <e-column field="job_description" textAlign="Left" clipMode="EllipsisWithTooltip" headerTextAlign="Center"
+                  headerText="Nội dung làm việc" width="230">
+                </e-column>
+                <e-column field="status" textAlign="Left" headerTextAlign="Center" headerText="Trạng thái" width="100">
+              </e-column>
+
+                <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Thao tác"
+                  headerTextAlign="Center" width="150">
+                  <ng-template #template let-data>
+                    <div class="row">
+                      <div class="col-sm-12 custom-tools">
+                        
+                        <ejs-tooltip content="Xem" target="#view" *ngIf="checkToolbar('VIEW')">
+                          <span id="view" (click)="clickRecord(data, 'view')">
+                            <i class="fa fa-eye view" aria-hidden="true"></i>
+                          </span>
+                        </ejs-tooltip>
+
+                        <ejs-tooltip content="Sửa" target="#edit" *ngIf="checkToolbar('EDIT')">
+                          <span id="edit" (click)="clickRecord(data, 'edit')">
+                            <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                          </span>
+                        </ejs-tooltip>
+
+                        <ejs-tooltip content="Xóa" target="#delete" *ngIf="checkToolbar('DELETE')">
+                          <span id="delete" (click)="clickRecord(data, 'delete')">
+                            <i class="fa fa-trash delete" aria-hidden="true"></i>
+                          </span>
+                        </ejs-tooltip>
+                      </div>
+                    </div>
+                  </ng-template>
+                </e-column>
+              </e-columns>
+            </ejs-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- CONFIRM DELETE ONE MODAL-->
+<app-confirm-modal id="confirm-delete-one-modal">
+  <div class="row full-width app-modal-header">
+    <span style="color: red;margin-right: 6px;"><i class="fa fa-exclamation-triangle"></i>
+    </span>Bạn có chắc chắn muốn xóa Lịch khách mời <b style="color:red">
+      {{ modelDelete && modelDelete.invited_guest ? modelDelete.invited_guest : ""}}</b> này không?
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>
+

@@ -1,0 +1,84 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI CỔNG</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">SỬA CỔNG</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">XEM CỔNG</span>
+        </div>
+
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Tên cổng -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="port_name" name="port_name" formControlName="port_name" [(ngModel)]="model.port_name"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="port_name">Tên cổng</label>
+                        <span class="input-error" *ngIf="editForm.get('port_name').hasError('required') && !editForm.get('port_name').untouched">
+                          Trường Tên cổng bắt buộc nhập
+                        </span>
+                        <span class="input-error" *ngIf="editForm.get('port_name').hasError('maxlength') && !editForm.get('port_name').untouched">
+                          Tên cổng không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Vị trí -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="location" name="location" formControlName="location" [(ngModel)]="model.location" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="location">Vị trí</label>
+                        <span class="input-error" *ngIf="editForm.get('location').hasError('maxlength') && !editForm.get('location').untouched">
+                          Vị trí không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="client_control" [dataSource]="lstClientControls" [placeholder]="'Chọn chức năng'"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.client_control"
+                          formControlName="client_control" [allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstClientControls)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="parent_id">Trạm kiểm soát</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Ghi chú -->
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <textarea type="text" id="note" name="note" formControlName="note" maxlength="2000"
+                          [(ngModel)]="model.note" rows="3"></textarea>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="note">Ghi chú</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" >
+              <button class="back__btn " (click)="back()">Quay lại</button>
+              <button class="save__btn btn-action" (click)="saveData()"  *ngIf="flagState != 'view'">Lưu thông tin</button>
+            </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

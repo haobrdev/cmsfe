@@ -1,0 +1,263 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI THÔNG TIN LÀN</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">CẬP NHẬT THÔNG TIN LÀN</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">CHI TIẾT THÔNG TIN LÀN</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Lane_name -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="lane_name" name="lane_name" formControlName="lane_name" [(ngModel)]="model.lane_name" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="lane_name">Tên làn</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('lane_name').hasError('required') &&!editForm.get('lane_name').untouched">
+                          Trường tên làn bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('lane_name').hasError('maxlength') && !editForm.get('lane_name').untouched">
+                          Tên làn không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Lane_type -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="lane_type" [dataSource]="lstLanesType"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.lane_type"
+                          formControlName="lane_type" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="lane_type">Loại làn</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('lane_type').hasError('required') &&!editForm.get('lane_type').untouched">
+                          Trường loại làn bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Lane_of_vehicle -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="lane_of_vehicle" [dataSource]="lstLanesOfVehicleType"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.lane_of_vehicle"
+                          formControlName="lane_of_vehicle" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="lane_of_vehicle">Loại phương tiện</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Cổng -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="port" [dataSource]="lstPortType"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.port"
+                          formControlName="port" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="port">Cổng</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('port').hasError('required') &&!editForm.get('port').untouched">
+                          Trường cổng bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Description -->
+                  <div class="col-sm-8">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="description" name="description" formControlName="description" [(ngModel)]="model.description" maxlength="20000"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="description">Đặc điểm</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="form-group row col-sm-12" style="padding: 0px;">
+                    <label for="text" class="col-form-label" style="padding: 15px;">Sơ đồ trang thiết bị </label> 
+                    <div *ngIf="flagState != 'view'" style="padding: 15px 0px 0px 15px;">
+                      <button class="upload_btn btn-action"  style="border: none;background-color: #fff;"  onclick="javascript:document.getElementById('uploadfilelane').click();" >
+                        <span><i class="fa fa-upload upload_icon" style="font-size: x-large;"></i></span>
+                      </button>
+                    </div>
+                    <div class="custom-file mt-15" style="display: none">
+                      <input style="font-size: 13px" #file type="file" id="uploadfilelane"   multiple="6" accept=".png, .jpg, .jpe, .doc, .docx, .pdf"
+                        [disabled]="flagState === 'view'" (change)="uploadFileLane(file.files)" style="display: none" />
+                    </div>
+                  </div>
+                </div>
+                <div class="row" id="fileNameDisplay">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'" style="padding-right: 30px !important;">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu thông tin</button>
+              </div>
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState == 'view'" style="padding-right: 20px !important;">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+              </div>
+            </div>
+          </form>
+          <div class="row info_equipment">
+            <div class="col-sm-12">
+              <div class="info-detail">
+                <div class="row title-info-detail">
+                  <div class="title_equipment" style="padding-left: 0px !important;">
+                    <span>Danh sách thiết bị</span>
+                  </div>
+                  <div class="main-toolbar" style="padding-right: 0px !important;" *ngIf="flagState != 'view'">
+                    <button id="add" class="btn-action btn-new" style="margin-right: 0px !important;" (click)="newEquipment()"><span><i class="fa fa-plus-circle"></i></span><span class="text-center">Thêm mới</span></button>
+                  </div>
+                </div>
+              </div>
+              <div class="card-main-content">
+                <div class="list-grid">
+                  <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data" rowHeight="45" headerHeight="52"
+                    [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+                    [height]="configs.height()" allowResizing="true" [locale]="configs.currentLang"
+                    [allowSelection]="true" [selectionSettings]="configs.selectionSettings"
+                    (actionComplete)='onActionComplete($event)'
+                    [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+                    [allowTextWrap]="true" [textWrapSettings]="configs.wrapSettings">
+                    <e-columns>
+                      <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                        [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                      <!-- Index -->
+                      <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                        width="70">
+                        <ng-template #template let-data>
+                          <span>{{ formatStt(data.index) }}</span>
+                        </ng-template>
+                      </e-column>
+                      <!-- Equipment_name -->
+                      <e-column field="equipment_name" textAlign="Left" headerTextAlign="Center" headerText="Tên thiết bị" width="110">
+                      </e-column>
+                      <!-- Equipment_type -->
+                      <e-column field="equipment_typename" textAlign="Left" headerTextAlign="Center" headerText="Loại" width="110">
+                      </e-column>
+                      <!-- Description -->
+                      <e-column field="description" textAlign="Left" headerTextAlign="Center" headerText="Đặc điểm" width="110">
+                      </e-column>
+                      <!-- Seri -->
+                      <e-column field="seri" textAlign="Left" headerTextAlign="Center" headerText="Seri" width="110">
+                      </e-column>
+                      <!-- Lane_type -->
+                      <e-column field="lane_name" textAlign="Left" headerTextAlign="Center" headerText="Sử dụng cho" width="110">
+                      </e-column>
+                      <!-- Show view, edit, delete -->
+                      <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Thao tác" width="120">
+                        <ng-template #template let-data>
+                          <div class="row">
+                            <div class="col-sm-12 custom-tools">
+                              <ejs-tooltip content="Xem" target="#view" *ngIf="checkToolbar('VIEW')">
+                                <span id="view" (click)="clickRecord(data, 'view_equipment')">
+                                  <i class="fa fa-eye view" aria-hidden="true"></i>
+                                </span>
+                              </ejs-tooltip>
+                              <ejs-tooltip content="Sửa" target="#edit" *ngIf="checkToolbar('EDIT')"
+                                [ngClass]="flagState !== 'view' ? 'enabletooltip' : 'disabledtooltip'">
+                                <span id="edit" (click)="clickRecord(data, 'edit_equipment')">
+                                  <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                                </span>
+                              </ejs-tooltip>
+                              <ejs-tooltip content="Xóa" target="#delete" *ngIf="checkToolbar('DELETE')"
+                                [ngClass]="flagState !== 'view' ? 'enabletooltip' : 'disabledtooltip'">
+                                <span id="delete" (click)="clickRecord(data, 'delete_equipment')">
+                                  <i class="fa fa-trash delete" aria-hidden="true"></i>
+                                </span>
+                              </ejs-tooltip>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </e-column>
+                    </e-columns>
+                  </ejs-grid>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE ONE MODAL-->
+<app-confirm-modal id="confirm-delete-one-modal">
+  <div class="row full-width app-modal-header">
+    <span style="color: red;margin-right: 6px;"><i class="fa fa-exclamation-triangle"></i>
+    </span>Bạn có chắc chắn muốn xóa Thiết bị <b style="color:red">
+      {{ modelEquipmentname ? modelEquipmentname : ""}}</b> này không?
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>
+
+<!-- CONFIRM BACK MODAL-->
+<!-- <app-confirm-modal id="confirm-back-modal">
+  <div class="row">
+    <span class="warning-modal">Cảnh báo</span>
+  </div>
+  <div class="row full-width app-modal-header">
+    <span style="color: red;margin-right: 6px;"><i class="fa fa-exclamation-triangle"></i>
+    </span>Thay đổi chưa lưu của bạn sẽ biến mất nếu bạn rời khỏi trang.
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmBackModal('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmBackModal('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal> -->
+
+<app-confirm-modal id="confirm-back-modal"  class="modal">
+  <h4 class="modal-entryexitlane-edit">Cảnh báo</h4>
+  <div class="modal-body entryexitlane-edit-modal-body">
+    <span class="entryexitlane-edit-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Thay đổi chưa lưu của bạn sẽ biến mất nếu bạn rời khỏi trang</span> 
+  </div>
+  <div class="modal-footer entryexitlane-edit-modal-footer">
+    <button class="btn btn-primary m-r-8 entryexitlane-edit-btn-default" (click)="confirmBackModal('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default entryexitlane-edit-btn-default" (click)="confirmBackModal('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>
+
+<!-- FORM ADD/ EDIT EQUIPMENT-->
+<add-equipment-modals *ngIf="equipmentDetailFlg" id="add-edit-equipment" (closeModal)="receiveData($event)" [dataFromParent]="dataToModal">
+</add-equipment-modals>

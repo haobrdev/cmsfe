@@ -1,0 +1,152 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-toolbar">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/list-icon.png" />
+          <span class="card-main-title">DANH SÁCH CHỨC NĂNG</span>
+        </div>
+        <div class="row full-width">
+          <h5 class="title">Tìm kiếm</h5>
+          <div class="card card-content-design">
+            <div class="main-toolbar">
+              <div class="row">
+                <div class="col-sm-11 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+                  <!-- Tiêu đề nội dung  -->
+                  <div class="form-group mgl-1">
+                    <div class="e-float-input">
+                      <input class="searchText" type="text" id="text" name="text"
+                        [placeholder]="'Tên chức năng/ Mã code'" [(ngModel)]="search.name"
+                        [ngModelOptions]="{ standalone: true }" (keypress)="searchListEnter($event)" />
+                      <label class="e-float-text" for="text">Tên chức năng/ Mã code</label>
+                    </div>
+                  </div>
+                  <!-- Button Tìm kiếm -->
+                </div>
+                <div class="col-sm-1 p-n">
+                  <div class="form-group">
+                    <div class="e-float-input m-t-0 bg">
+                      <button class="btn btn-search" (click)="getListData()">
+                        Tìm kiếm
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row full-width">
+          <div class="col-sm-12 main-toolbar">
+            <button id="add" class="btn-action {{ itemButton.iconColorClass }}" (click)="clickToolbar(itemButton)"
+              *ngFor="let itemButton of toolbar" [disabled]="itemButton.isDisable === true">
+              <span><i class="fa {{ itemButton.prefixIcon }}"></i></span>
+              <span class="text-center">{{ itemButton.text }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card-main-content">
+          <div class="list-grid">
+            <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+              [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+              [height]="configs.height()" [allowSorting]="false" allowResizing="true" [locale]="configs.currentLang"
+              [allowSelection]="true" [showColumnChooser]="false" [selectionSettings]="configs.selectionSettings"
+              [allowFiltering]="false" (dataStateChange)="dataStateChange($event)"
+              [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+              (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)" [allowTextWrap]="true"
+              [textWrapSettings]="configs.wrapSettings">
+              <e-columns>
+                <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                  [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                  width="70">
+                  <ng-template #template let-data>
+                    <span>{{ formatStt(data.index) }}</span>
+                  </ng-template>
+                </e-column>
+                <e-column field="orders" textAlign="Left" headerTextAlign="Center" headerText="Thứ tự hiển thị"
+                  width="80">
+                </e-column>
+                <e-column field="parent_name" textAlign="Left" headerTextAlign="Center" headerText="Chức năng liền trên"
+                  width="110">
+                </e-column>
+                <e-column field="name" textAlign="Left" headerTextAlign="Center" headerText="Tên chức năng" width="110">
+                </e-column>
+                <e-column field="code" textAlign="Left" headerTextAlign="Center" headerText="Mã code" width="110">
+                </e-column>
+                <e-column field="url" textAlign="Left" headerTextAlign="Center" headerText="Đường dẫn" width="110">
+                </e-column>
+                <e-column field="description" textAlign="Center" clipMode="EllipsisWithTooltip" headerTextAlign="Center"
+                  headerText="Mô tả" width="140">
+                </e-column>
+                <e-column field="status" textAlign="Center" clipMode="EllipsisWithTooltip" headerTextAlign="Center"
+                  headerText="Hiển thị" width="80">
+                  <ng-template #template let-data>
+                    <ejs-checkbox label="" [checked]="data.status == 1" (change)="changeStatus(data)">
+                    </ejs-checkbox>
+                  </ng-template>
+                </e-column>
+                <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Thao tác"
+                  headerTextAlign="Center" width="120">
+                  <ng-template #template let-data>
+                    <div class="row">
+                      <div class="col-sm-12 custom-tools">
+                        <ejs-tooltip content="Sửa" target="#edit">
+                          <span id="edit" (click)="clickRecord(data, 'edit')" *ngIf="checkToolbar('EDIT')">
+                            <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                          </span>
+                        </ejs-tooltip>
+                        <ejs-tooltip content="Xóa" target="#delete">
+                          <span id="delete" (click)="clickRecord(data, 'delete')" *ngIf="checkToolbar('DELETE')">
+                            <i class="fa fa-trash delete" aria-hidden="true"></i>
+                          </span>
+                        </ejs-tooltip>
+                      </div>
+                    </div>
+                  </ng-template>
+                </e-column>
+              </e-columns>
+            </ejs-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE ONE MODAL-->
+<!-- <app-confirm-modal id="confirm-delete-one-modal">
+  <div class="row full-width app-modal-header">
+    <span style="color: red;margin-right: 6px;"><i class="fa fa-exclamation-triangle"></i>
+    </span>Bạn có chắc chắn muốn xóa Chức năng <b style="color:red">
+      {{ modelDelete && modelDelete.name ? modelDelete.name : ""}}</b> này không?
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal> -->
+
+<app-confirm-modal id="confirm-delete-one-modal"  class="modal">
+  <div class="modal-body function-modal-body">
+    <span class="function-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Bạn có chắc chắn muốn xóa Chức năng <b style="color:red">
+        {{ modelDelete && modelDelete.name ? modelDelete.name : ""}}</b>&nbsp;này không?
+    </span> 
+  </div>
+  <div class="modal-footer function-modal-footer">
+    <button class="btn btn-primary m-r-8 function-btn-default" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default function-btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>

@@ -1,0 +1,208 @@
+<div class="app-modal">
+    <div class="app-modal-body">
+        <div class="row header">
+          <div class="col-sm-10 title">
+            <span *ngIf="flagStateEquipment == 'add_equipment'">Thêm mới thông tin thiết bị</span>
+            <span *ngIf="flagStateEquipment == 'edit_equipment'">Cập nhập thông tin thiết bị</span>
+            <span *ngIf="flagStateEquipment == 'view_equipment'">Chi tiết thông tin thiết bị</span>
+          </div>
+          <div class="col-sm-2 icon">
+            <div class="btn-remove" (click)="close()">
+                <span><i class="fa fa-close"></i></span>
+            </div>
+          </div>
+        </div>
+        <div class="app-main-content" style="background: white ;padding-top: 0px !important; min-height: 130px;">
+          <div class="app-container">
+            <div class="app-content" style="padding-top: 0px !important;">
+              <div class="card card-content" style="border: none;">
+                <div class="card-main-content">
+                  <form name="editForm" [formGroup]="editForm" novalidate>
+                    <div class="row">
+                      <!-- Equipment_type -->
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <ejs-dropdownlist id="equipment_type" [dataSource]="lstEquipmentsType"
+                              [fields]="fields" [showClearButton]="true" [(ngModel)]="model.equipment_type"
+                              formControlName="equipment_type" [allowFiltering]="true" (ngModelChange)="GetEquipmentsName()">
+                            </ejs-dropdownlist>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text required" for="equipment_type">Chọn loại thiết bị</label>
+                            <span class="input-error"
+                              *ngIf="editForm.get('equipment_type').hasError('required') &&!editForm.get('equipment_type').untouched">
+                              Trường loại thiết bị bắt buộc nhập
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Equipment_id -->
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <ejs-dropdownlist id="equipment_id" [dataSource]="lstEquipmentsName"
+                              [fields]="fields" [showClearButton]="true" [(ngModel)]="model.equipment_id"
+                              formControlName="equipment_id" [allowFiltering]="true"  (ngModelChange)="GetDetailEquipments()">
+                            </ejs-dropdownlist>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text required" for="equipment_id">Chọn thiết bị</label>
+                            <span class="input-error"
+                              *ngIf="editForm.get('equipment_id').hasError('required') &&!editForm.get('equipment_id').untouched">
+                              Trường thiết bị bắt buộc nhập
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Description -->
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <input type="text" id="description" name="description" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.description" disabled/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="description">Đặc điểm</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Seri -->
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <input type="text" id="seri" name="seri" [ngModelOptions]="{standalone: true}" [(ngModel)]="model.seri" disabled/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="seri">Số seri</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Lane_type -->
+                      <div class="col-sm-3" style="padding-right: 0px !important;">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <ejs-dropdownlist id="lane_type" [dataSource]="lstEquipmentsDetailType"
+                              [fields]="fields" [showClearButton]="true" [(ngModel)]="info_lane_type"
+                              formControlName="lane_type" [allowFiltering]="true">
+                            </ejs-dropdownlist>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text required" for="lane_type">Sử dụng cho</label>
+                            <span class="input-error"
+                              *ngIf="editForm.get('lane_type').hasError('required') &&!editForm.get('lane_type').untouched">
+                              Trường sử dụng cho bắt buộc nhập
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Lane_type -->
+                      <div class="col-sm-3" style="padding-left: 0px !important;">
+                        <div class="row">
+                          <!-- Prioritize -->
+                          <div class="col-sm-6" style="margin-top: 23px;">
+                            <div class="form-group">
+                              <div class="e-float-input" style="margin-top: 20px;">
+                                <ejs-checkbox label="Ưu tiên" [checked]="model.is_prioritize" [(ngModel)]="model.is_prioritize"
+                                  formControlName="is_prioritize">
+                                </ejs-checkbox>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Active -->
+                          <div class="col-sm-6" style="margin-top: 23px; padding-left: 0px !important;">
+                            <div class="form-group">
+                              <div class="e-float-input" style="margin-top: 20px;">
+                                <ejs-checkbox label="Kích hoạt" [checked]="model.is_active" [(ngModel)]="model.is_active"
+                                  formControlName="is_active">
+                                </ejs-checkbox>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Vehicle_equipment_lane -->
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <ejs-dropdownlist id="vehicle_equipment_lane" [dataSource]="lstLanesOfVehicleType"
+                              [fields]="fields" [showClearButton]="true" [(ngModel)]="model.vehicle_equipment_lane"
+                              formControlName="vehicle_equipment_lane" [allowFiltering]="true">
+                            </ejs-dropdownlist>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text required" for="vehicle_equipment_lane">Loại phương tiện</label>
+                            <span class="input-error"
+                              *ngIf="editForm.get('vehicle_equipment_lane').hasError('required') &&!editForm.get('vehicle_equipment_lane').untouched">
+                              Trường loại phương tiện bắt buộc nhập
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Ip -->
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <input type="text" id="ip" name="ip" formControlName="ip" [(ngModel)]="model.ip" maxlength="255"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="ip">Địa chỉ IP</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Ip_port -->
+                      <div class="col-sm-2">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <input type="text" id="ip_port" name="ip_port" formControlName="ip_port" [(ngModel)]="model.ip_port" maxlength="9"
+                              onkeydown="return ( event.ctrlKey || event.altKey 
+                              || (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) 
+                              || (95<event.keyCode && event.keyCode<106)
+                              || (event.keyCode==8) || (event.keyCode==9) 
+                              || (event.keyCode>34 && event.keyCode<40) 
+                              || (event.keyCode==46) )"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="ip_port">Cổng</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Account -->
+                      <div class="col-sm-3" *ngIf="isShow">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <input type="text" id="account" name="account" formControlName="account" [(ngModel)]="model.account" maxlength="255"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="account">Tài khoản</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Pass -->
+                      <div class="col-sm-3" *ngIf="isShow">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <input type="password" id="pass" name="pass" formControlName="pass" [(ngModel)]="model.pass" maxlength="255"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="pass">Mật khẩu</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Link cấu hình -->
+                      <div class="col-sm-6" *ngIf="isShow">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <input type="extension" id="extension" name="extension" formControlName="extension" [(ngModel)]="model.extension" maxlength="255"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="extension">Link cấu hình</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12 text-right mt-3" >
+                        <button class="back__btn" (click)="close()" *ngIf="flagStateEquipment !== 'view_equipment'">Quay lại</button>
+                        <button #addButton class="save__btn" (click)="chooseMember()" *ngIf="flagStateEquipment !== 'view_equipment'">Lưu thông tin</button>
+                        <button class="back__btn" (click)="close()" *ngIf="flagStateEquipment == 'view_equipment'" style="margin-right: 0px !important;">Quay lại</button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <ng-content></ng-content>
+</div>
+<div class="app-modal-background"></div>

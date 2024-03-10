@@ -1,0 +1,88 @@
+<div class="app-main-content">
+    <div class="app-container">
+      <div class="app-content">
+        <div class="card card-content">
+          <div class="card-main-header">
+            <img src="/assets/images/plus.png" />
+            <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI TRẠM KIỂM SOÁT</span>
+            <span class="card-main-title" *ngIf="flagState === 'edit'">SỬA TRẠM KIỂM SOÁT</span>
+            <span class="card-main-title" *ngIf="flagState === 'view'">XEM TRẠM KIỂM SOÁT</span>
+          </div>
+  
+          <div class="card-main-content">
+            <form name="editForm" [formGroup]="editForm" novalidate>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <!-- Tên trạm kiểm soát -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="e-float-input">
+                          <input type="text" id="checkpoint_name" name="checkpoint_name" formControlName="checkpoint_name" [(ngModel)]="model.checkpoint_name"  maxlength="255"  autofocus />
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text required" for="checkpoint_name">Tên trạm kiểm soát</label>
+                          <span class="input-error" *ngIf="
+              editForm.get('checkpoint_name').hasError('required') &&
+              !editForm.get('checkpoint_name').untouched
+            ">
+                            Trường Tên trạm kiểm soát bắt buộc nhập
+                          </span>
+                          <span class="input-error" *ngIf="
+              editForm.get('checkpoint_name').hasError('maxlength') &&
+              !editForm.get('checkpoint_name').untouched
+            ">
+            Tên trạm kiểm soát không được vượt quá 255 ký tự
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Vị trí -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                        <div class="e-float-input">
+                            <input type="text" id="location" name="location" formControlName="location" [(ngModel)]="model.location"  maxlength="255" />
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="location">Vị trí</label>
+                        </div>
+                        </div>
+                    </div>
+                   <!-- Địa chỉ IP trạm-->
+                   <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="client_address_ip" name="client_address_ip" formControlName="client_address_ip" [(ngModel)]="model.client_address_ip" maxlength="255" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="client_address_ip">Địa chỉ IP trạm</label>
+                      </div>
+                    </div>
+                  </div>
+
+
+                    <!-- Ghi chú -->
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <div class="e-float-input">
+                          <textarea type="text" id="note" name="note" formControlName="note" maxlength="2000"
+                            [(ngModel)]="model.note" rows="3"></textarea>
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text" for="note">Ghi chú</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <!-- *ngIf="flagState != 'view'" -->
+                <div class="col-sm-12 text-right mt-3" >
+                  <button class="back__btn " (click)="back()">Quay lại</button>
+                  <!-- *ngIf="flagState === 'new'" -->
+                  <button class="save__btn btn-action" (click)="saveData()"  *ngIf="flagState != 'view'">Lưu thông tin</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

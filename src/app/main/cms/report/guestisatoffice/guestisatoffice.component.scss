@@ -1,0 +1,33 @@
+cms-guestisatoffice {
+    .app-main-content
+      .app-container
+      .app-content
+      .row.button-action
+      button.btn.btn-primary {
+      font-size: 10px;
+      height: 25px;
+    }
+    .app-main-content
+      .app-container
+      .app-content
+      span {
+      padding-right: 0px;
+      font-size: 14px;
+    }
+
+    @media only screen and (max-width: 1599px) and (min-width: 1000px) {
+      .app-container .app-content.list_document {
+        padding-top: 265px !important;
+      }
+    }
+    @media only screen and (min-width: 1600px) {
+      .app-content.list_document {
+        padding-top: 250px !important;
+      }
+    }
+  }
+
+  .app-main-content .app-container .card-content ul.card-inline li {
+    padding-right: 3px;
+  }
+  

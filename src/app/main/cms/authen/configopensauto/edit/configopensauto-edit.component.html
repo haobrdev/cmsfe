@@ -1,0 +1,105 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI CẤU HÌNH TỰ ĐỘNG MỞ</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">SỬA CẤU HÌNH TỰ ĐỘNG MỞ</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="requirement" [dataSource]="lstRequirements" [fields]="fields"
+                          [(ngModel)]="model.requirement" [placeholder]="" formControlName="requirement"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstRequirements)"
+                          [showClearButton]="true" placeholder="Chọn điều kiện" (ngModelChange)="changeModel('requirement')">
+                      </ejs-dropdownlist>
+                      <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="requirement">Điều kiện</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('requirement').hasError('required') &&!editForm.get('requirement').untouched">
+                          Trường Điều kiện bắt buộc nhập
+                        </span> 
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="data_field" [dataSource]="lstDataField" [placeholder]="''"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.data_field"
+                          formControlName="data_field" [allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstDataField)" (ngModelChange)="changeModel('data_field')">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="data_field">Trường dữ liệu</label>
+                        <span class="input-error"
+                        *ngIf="editForm.get('data_field').hasError('required') &&!editForm.get('data_field').untouched">
+                        Trường dữ liệu bắt buộc nhập
+                      </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="value" [dataSource]="lstValues" [placeholder]="''"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.value"
+                          formControlName="value" [allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstValues)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="value">Giá trị</label>
+                        <span class="input-error"
+                        *ngIf="editForm.get('value').hasError('required') &&!editForm.get('value').untouched">
+                        Trường Giá trị bắt buộc nhập
+                      </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-checkbox label="Kích hoạt" [checked]="model.is_active" [(ngModel)]="model.is_active"
+                          formControlName="is_active" (change)="changeAcctive()">
+                        </ejs-checkbox>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu thông tin</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-confirm-modal *ngIf="checkWarn" id="confirm-back-modal" class="modal">
+  <h3>Cảnh báo</h3>
+  <div class="modal-body configopensauto-edit-modal-body">
+    <span class="configopensauto-edit-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle warning"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Thay đổi chưa lưu của bạn sẽ biến mất nếu bạn rời khỏi trang..</span> 
+  </div>
+  <div class="modal-footer configopensauto-edit-modal-footer">
+    <button class="btn btn-primary m-r-8 configopensauto-edit-btn-default" (click)="confirmBack('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default configopensauto-edit-btn-default" (click)="confirmBack('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>

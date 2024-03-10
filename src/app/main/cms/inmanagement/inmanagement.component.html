@@ -1,0 +1,1359 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="card card-content">
+      <div class="card-main-header">
+        <div class="row">
+          <!-- Trạm kiểm soát -->
+          <div class="form-group mgl-1">
+            <div class="e-float-input" style="margin-top: 0px;">
+              TRẠM KIỂM SOÁT
+            </div>
+          </div>
+          <div class="form-group mgl-1">
+            <div class="e-float-input" style="margin-top: 0px;">
+              <ejs-dropdownlist id="checkpoint_name" class="checkpoint_name" [dataSource]="lstCheckpointName" [fields]="fields"
+                [(ngModel)]="search.checkpoint_name" (ngModelChange)="getPortName()"
+                [showClearButton]="true" [allowFiltering]="true">
+              </ejs-dropdownlist>
+            </div>
+          </div>
+          <!-- Cổng -->
+          <div class="form-group mgl-1">
+            <div class="e-float-input" style="margin-top: 0px;">
+              CỔNG
+            </div>
+          </div>
+          <div class="form-group mgl-1">
+            <div class="e-float-input" style="margin-top: 0px;">
+              <ejs-dropdownlist id="port_name" class="port_name" [dataSource]="lstPortName" [fields]="fields"
+                [(ngModel)]="search.port_name" (ngModelChange)="searchAfterFocus()"
+                [showClearButton]="true" [allowFiltering]="true">
+              </ejs-dropdownlist>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-main-content">
+        <div class="row">
+          <div [ngClass]="isCase1[indexFirst] ? 'col-sm-6' : 'col-sm-12'" *ngFor="let item of dataLists; let indexFirst = index" style="margin-bottom: 30px;">
+            <div class="col-sm-12 form-group" style="font-weight: bold;padding: 0px 0px 0px 4px;height: 38px;background-color: #eff1f3;background-clip: border-box;border: 1px solid rgba(0,0,0,.125);            border-radius: 0.25rem;">
+              <button (click)="toggleCollapse(indexFirst)" style="    float: right;border: none;">
+                <i class="fas" style="font-size: xx-large;" [ngClass]="isCollapsedList[indexFirst] ? 'fa fa-angle-up' : 'fa fa-angle-down'"></i>
+              </button>
+              <div style="padding-top:4px;">{{item.lane_name}} - {{item.lane_type}} - {{item.lane_of_vehicle}}</div>
+            </div>
+            <!-- Trường hợp chỉ có làn vào/ ra -->
+            <div class="row col-sm-12" style="padding: 0px 0px 20px 0px;" *ngIf="isCase1[indexFirst]" [@collapseAnimation]="isCollapsedList[indexFirst] ? 'closed' : 'open'">
+              <div class="col-sm-12" style="padding: 0px !important;">
+                <div class="row">
+                  <div *ngIf="isLanein[indexFirst]" style="display: contents;">
+                    <!-- Image camera / IN-->
+                    <div class="col-sm-6 padding-4" *ngFor="let lanein of item.listIn; let index = index" style="position: relative;">
+                      <div class="on_drag_camera" draggable="true" (dragstart)="onDragStart($event, index, 'in')" (dragover)="onDragOver($event)" (drop)="onDrop($event, indexFirst, index, 'in')">
+                        <div class="image_multi_camera">
+                          <div class="image_chirld_camera">
+                            <div class="fp-Video">
+                              <img id="cameralanein{{indexFirst}}{{index}}" [src]="lanein.http_link" class="display" style="cursor: grabbing;"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Button lane in --> 
+                    <!-- Class ="col-12" -->
+                    <div  style="position: absolute;top: 15.4rem;right: 8px;background-color: #fff;height: 34px;border: 1px solid #000;border-radius: 6px;padding-top: 4px;">
+                      <div style="text-align: right;" (click)="takePhotoLaneIn(indexFirst)">
+                        <button class="capture_btn btn-action">
+                          <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div *ngIf="isLaneout[indexFirst]" style="display: contents;">
+                    <!-- Image camera / OUT-->
+                    <div class="col-sm-6 padding-4" *ngFor="let laneout of item.listOut; let index = index" style="position: relative;">
+                      <div class="on_drag_camera" draggable="true" (dragstart)="onDragStart($event, index, 'out')" (dragover)="onDragOver($event)" (drop)="onDrop($event, indexFirst, index, 'out')">
+                        <div class="image_multi_camera">
+                          <div class="image_chirld_camera">
+                            <div class="fp-Video">
+                              <img id="cameralaneout{{indexFirst}}{{index}}" [src]="laneout.http_link" class="display" style="cursor: grabbing;"/>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Button lane out -->
+                    <!-- class="col-sm-12" -->
+                    <div  style="position: absolute;top: 15.4rem;right: 8px;background-color: #fff;height: 34px;padding-top: 4px;border: 1px solid #000;border-radius: 6px;">
+                      <div style="text-align: right;" (click)="takePhotoLaneOut(indexFirst)">
+                        <button class="capture_btn btn-action">
+                          <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red"></i>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-12" [formGroup]="form.get('groups').controls[indexFirst]" style="padding: 0px !important;">
+                <div class="row">
+                  <div *ngIf="isLanein[indexFirst]" style="display: contents;">
+                    <!-- Hình ảnh xe vào -->
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="overview_in_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('overview_in_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text" for="car_in_img">Hình ảnh xe vào</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="identification_in_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('identification_in_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="detail_in_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('detail_in_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Hình ảnh xe vào -->
+                    <div class="col-sm-12" style="padding: 8px 0px 0px 0px;">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px;">
+                          <img/>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- In/ Out Car -->
+                    <div class="col-sm-2" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">XE VÀO 
+                      <i class="fa fa-arrow-up" aria-hidden="true" style="color: #82f98e; font-size: 30px;"></i> </div>
+                    <div class="col-sm-2 text-right" style="font-weight: bold; margin-top: 27px; color: #de222a;">
+                      {{form.get('groups').controls[indexFirst].get('license_in').value}}
+                    </div>
+                    <div class="col-sm-8"></div>
+                  </div>
+                  <div *ngIf="isLaneout[indexFirst]" style="display: contents;">
+                    <!-- Hình ảnh xe ra -->
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="overview_out_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('overview_out_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text" for="car_out_img">Hình ảnh xe ra</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="identification_out_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('identification_out_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="detail_out_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('detail_out_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Hình ảnh xe vào -->
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="overview_inout_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('overview_inout_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text" for="car_in_img">Hình ảnh xe vào</label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="identification_inout_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('identification_inout_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-4 padding-4">
+                      <div class="form-group">
+                        <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                          <img id="detail_inout_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('detail_inout_img').value" class="display"/>
+                          <span class="e-float-line"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- In/ Out Car -->
+                    <div class="col-sm-2" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">XE VÀO 
+                      <i class="fa fa-arrow-up" aria-hidden="true" style="color: #82f98e; font-size: 30px;"></i> </div>
+                    <div class="col-sm-2 text-right" style="font-weight: bold; margin-top: 27px; color: #de222a;">
+                      {{licenseinout[indexFirst]}}
+                    </div>
+                    <div class="col-sm-2" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;">XE RA
+                      <i class="fa fa-arrow-down" aria-hidden="true" style="color: #ec808d; font-size: 30px;"></i> </div>
+                    <div class="col-sm-2 text-right" style="font-weight: bold; margin-top: 27px; color: #de222a;">
+                      {{form.get('groups').controls[indexFirst].get('license_out').value}}
+                    </div>
+                    <div class="col-sm-4" style="text-align: right; margin-top: 15px;" *ngIf="isCorrect[indexFirst]">
+                      <button class="correct_information">ĐÚNG THÔNG TIN</button>
+                    </div>
+                    <div class="col-sm-4" style="text-align: left; margin-top: 15px;" *ngIf="isIncorrect[indexFirst]">
+                      <button class="incorrect">KHÔNG ĐÚNG</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <!-- Entry information -->
+                  <div class="col-sm-12" style="font-weight: bold; margin-bottom: 10px;">THÔNG TIN NGƯỜI VÀO</div>
+                  <!-- Hình ảnh vào -->
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <div class="e-float-input lable-register">
+                        Hình ảnh vào
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Loại giấy tờ -->
+                  <div class="col-sm-3 col-chirld">
+                    <div class="form-group">
+                      <div class="e-float-input lable-register">
+                        Loại giấy tờ
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Identification -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input lable-register">
+                        Giấy tờ tùy thân
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Hình ảnh vào -->
+                  <div class="col-sm-3">
+                    <!-- Ảnh người vào/ người ra-->
+                    <div class="row">
+                      <!-- Photo of person entering -->
+                      <div class="col-sm-12 col-chirld">
+                        <div class="image_person_entering" style="position: relative;">
+                          <div class="person_entering_photo_top">
+                            <!-- caputure_avata.png -->
+                            <div class="upload-file-area green"
+                                  style="margin-top: 0px; margin-bottom: 0px; height: 240px;"
+                                  (click)="takeAPhotoForImgIn(indexFirst)"
+                                  *ngIf="!form.get('groups').controls[indexFirst].get('img_in').value">
+                              <img src="/assets/images/caputure_avata.png" style="width: 100%; height: 100%; margin-top: 0px;" />
+                            </div>
+                            <img [src]="form.get('groups').controls[indexFirst].get('img_in').value"
+                                  *ngIf="form.get('groups').controls[indexFirst].get('img_in').value" style="width: 100%; height: 100%;" />
+                            <span *ngIf="
+                                form.get('groups').controls[indexFirst].get('img_in').value &&
+                                form.get('groups').controls[indexFirst].get('img_in').value !== '/assets/images/caputure_avata.png'" 
+                                style="
+                                  position: absolute;
+                                  top: 0px;
+                                  right: 5px;
+                                  cursor: pointer;">
+                              <i class="fa fa-remove" (click)="removeImage('img_in', indexFirst)"></i></span>
+                          </div>
+                          <div class="custom-file mt-15" style="display: none">
+                            <input style="display: none;" type="file" #imgin id="img_in{{indexFirst}}" accept=".png, .jpg, .jpeg"
+                            (change)="uploadImgIn($event, indexFirst)" />
+                          </div>
+                          <!-- Photo of person entering button-->
+                          <div style="position: absolute;top: 12.4rem;right: 8px;background-color: #fff;height: 34px;border: 1px solid #000;border-radius: 6px;">
+                            <button class="person_capture_btn btn-action" (click)="takeAPhotoForImgIn(indexFirst)">
+                              <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red;"></i>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Loại giấy tờ -->
+                  <div class="col-sm-3 col-chirld">
+                    <!-- Row Radio Button-->
+                    <div class="row">
+                      <div class="col-sm-6 col-chirld" *ngFor='let documenttype of documenttypes; let indexRadio = index'>
+                        <div class="form-group">
+                          <ejs-radiobutton [label]="documenttype" [value]="documenttype" [name]="'documenttype' + indexFirst"
+                                           [formControlName]="'documenttype'" (change)="onRadioButtonClick($event.value, indexFirst)"></ejs-radiobutton>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Identification -->
+                  <div class="col-sm-6">
+                    <div class="row">
+                      <!-- Identification Image-->
+                      <div class="col-sm-12 col-chirld">
+                        <div class="image_identification" style="position: relative;">
+                          <div class="identification_top">
+                            <div class="upload-file-area green"
+                                 style="margin-top: 0px; margin-bottom: 0px; height: 240px;"
+                                 (click)="takeAPhotoForIdentification(indexFirst)"
+                                 *ngIf="!form.get('groups').controls[indexFirst].get('identification').value">
+                              <img src="/assets/images/capture_paper.png" style="width: 100%; height: 100%; margin-top: 0px;" />
+                            </div>
+                            <img [src]="form.get('groups').controls[indexFirst].get('identification').value"
+                                 *ngIf="form.get('groups').controls[indexFirst].get('identification').value" style="width: 100%; height: 100%;" />
+                            <span *ngIf="
+                                form.get('groups').controls[indexFirst].get('identification').value &&
+                                form.get('groups').controls[indexFirst].get('identification').value !== '/assets/images/capture_paper.png'" 
+                                style="
+                                  position: absolute;
+                                  top: 0px;
+                                  right: 5px;
+                                  cursor: pointer;">
+                              <i class="fa fa-remove" (click)="removeImage('identification', indexFirst)"></i></span>
+                          </div>
+                          <div class="custom-file mt-15" style="display: none">
+                            <input style="display: none;" type="file" #identification id="identification{{indexFirst}}" accept=".png, .jpg, .jpeg"
+                            (change)="uploadIdentification($event, indexFirst)" />
+                          </div>
+                          <!-- Identification Button-->
+                          <div style="position: absolute;top: 12.4rem;right: 8px;background-color: #fff;height: 34px;border: 1px solid #000;border-radius: 6px;">
+                            <button class="person_capture_btn btn-action" (click)="takeAPhotoForIdentification(indexFirst)">
+                              <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red;"></i>
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Tìm kiếm theo số giấy tờ -->
+                  <div class="col-sm-6" style="padding-right: 10px !important;">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <div class="e-float-input lable-register search-container">
+                          <input type="text" #searchFocus formControlName="searchValue" [placeholder]="'Nhập số giấy tờ...'" (keypress)="searchValueEnter($event, indexFirst, 'true')" (blur)="clearDataWhenSeachValueNull($event.target.value, indexFirst)" (input)="onSuggestId($event.target.value, indexFirst)">
+                          <ul *ngIf="form.get('groups.' + indexFirst + '.searchResults')?.value?.length > 0">
+                            <li *ngFor="let result of form.get('groups.' + indexFirst + '.searchResults')?.value" (click)="selectSuggestion(result, indexFirst)">
+                              {{ result }}
+                            </li>
+                          </ul>
+                          <i class="fa fa-search" aria-hidden="true" (click)="searchByInputDocument(indexFirst, 'true')"></i>
+                        </div>
+                        <label class="e-float-text" for="note">Tìm kiếm theo số giấy tờ</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Nhập số giấy tờ -->
+                  <div class="col-sm-6" style="padding-left: 10px;">
+                    <div class="row" style="height: 24px;">
+                    </div>
+                    <div class="row">
+                        <!-- Số giấy tờ -->
+                        <div class="col-sm-3 col-chirld" style="margin-top: 15px;">
+                          <div class="form-group">
+                            <div class="e-float-input lable-register">
+                              Số giấy tờ
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-9 col-chirld" style="margin-top: 15px;">
+                          <div class="form-group">
+                            <div class="e-float-input lable-register">
+                              <input type="text" id="document_number" name="document_number" formControlName="document_number" maxlength="255" (blur)="checkInSystem($event.target.value, indexFirst)"/>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-6 col-chirld col-left">
+                         <div class="row">
+                              <!-- Địa chỉ -->
+                              <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowAddress">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Địa chỉ
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowAddress">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <input type="text" id="address" name="address" formControlName="address" maxlength="255"/>
+                                  </div>
+                                </div>
+                              </div>
+                         </div>
+                      </div> 
+                      <div class="col-sm-6 col-chirld col-right">
+                        <div class="row">
+                          <!-- Loại ra vào -->
+                          <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowEmployeeType">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                Loại ra vào
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowEmployeeType">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                <ejs-dropdownlist id="employee_type" [dataSource]="lstEmployeeType" [fields]="fields" [showClearButton]="true" 
+                                  formControlName="employee_type" [allowFiltering]="true" (ngModelChange)="changeEmployeeType(indexFirst)">
+                                </ejs-dropdownlist>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-6 col-chirld col-left">
+                        <div class="row">
+                            <!-- Họ tên -->
+                            <div class="col-sm-3 col-chirld" style="margin-top: 15px;">
+                              <div class="form-group">
+                                <div class="e-float-input lable-register">
+                                  Họ tên
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-9 col-chirld" style="margin-top: 15px;">
+                              <div class="form-group">
+                                <div class="e-float-input lable-register">
+                                  <input type="text" id="full_name" name="full_name" formControlName="full_name" maxlength="255"/>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-chirld col-right">
+                        <div class="row">
+                            <!-- Điện thoại -->
+                            <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowPhonenumber">
+                              <div class="form-group">
+                                <div class="e-float-input lable-register">
+                                  Điện thoại
+                                </div>
+                              </div>
+                            </div> 
+                            <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowPhonenumber">
+                              <div class="form-group">
+                                <div class="e-float-input lable-register">
+                                  <input type="text" id="phone_number" name="phone_number" formControlName="phone_number" maxlength="255"/>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="row">
+                      <div class="col-sm-6 col-chirld col-left">
+                        <div class="row"> 
+                          <!-- Info -->
+                          <div class="col-sm-12 col-chirld" *ngIf="isShowList[indexFirst]">
+                            <div class="row">
+                              <!-- Chức vụ -->
+                              <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Chức vụ
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <input type="text" id="job_title_name" name="job_title_name" formControlName="job_title_name" disabled />
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- Phòng ban -->
+                              <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Phòng ban
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <input type="text" id="department" name="department" formControlName="department" disabled />
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- Giữ giấy tờ -->
+                              <div class="col-sm-3 col-chirld" style="margin-top: 15px;">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Giữ giấy tờ
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-2 col-chirld" style="margin-top: 15px;">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <ejs-checkbox label="" formControlName="document_keep" (change)="onCheckboxChange($event, indexFirst)"></ejs-checkbox>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- Đã trả giấy tờ -->
+                              <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Đã trả giấy tờ
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-2 col-chirld" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <ejs-checkbox label="" formControlName="document_return"></ejs-checkbox>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-2 col-chirld" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register text-right">
+                                    <div class="custom-file mt-15" style="display: none">
+                                      <input style="display: none;" type="file" #documentreturnimg id="document_return_img{{indexFirst}}" accept=".png, .jpg, .jpeg"
+                                      (change)="uploadDocumentReturn($event, indexFirst)" />
+                                    </div>
+                                    <div class="hover_image">
+                                      <span *ngIf="isShowIconUpload[indexFirst]" (click)="takeAPhotoForDocumentReturn(indexFirst)">
+                                        <i class="fa fa-upload upload_icon fa-2x" style="color: #000000;"></i>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-12 col-chirld text-right" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register text-right">
+                                    <div class="hover_image">
+                                      <span (click)="downloadImage(indexFirst)">{{imageDocumentReturnName[indexFirst]}}</span>
+                                      <span *ngIf="isShowIconDelete[indexFirst]" style="padding-left: 5px;">
+                                        <i class="fa fa-trash fa-2x" style="color: red;" (click)="removeImage('document_return_img', indexFirst)"></i>
+                                      </span>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                               <!-- Thông tin đi cùng -->
+                              <div class="col-sm-12 col-chirld" *ngIf="isShowGuestcalendar">
+                                <div class="form-group">
+                                  <div class="e-float-input">
+                                    <textarea type="text" id="participant_information" name="participant_information" formControlName="participant_information" maxlength="2000"
+                                      rows="3" style="height: 114px;"></textarea>
+                                    <span class="e-float-line"></span>
+                                    <label class="e-float-text" for="participant_information">Thông tin đi cùng</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-6 col-chirld col-right">
+                        <div class="row" *ngIf="isShowList[indexFirst]"> 
+                          <!-- Khách mời đã đặt lịch -->
+                          <div class="col-sm-5 col-chirld" style="margin-top: 15px;" *ngIf="isShowGuestcalendar">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                Khách mời đã đặt lịch
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-7 col-chirld" style="margin-top: 15px;" *ngIf="isShowGuestcalendar">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                <ejs-dropdownlist id="invited_guest" [dataSource]="lstGuestcalendar" [fields]="fields" 
+                                  [showClearButton]="true" formControlName="invited_guest" [allowFiltering]="true" (ngModelChange)="getInfoGuestsBookedAppointments(indexFirst)">
+                                </ejs-dropdownlist>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Người làm việc -->
+                          <div class="col-sm-5 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                Người làm việc
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-7 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                <ejs-dropdownlist id="invited_person" [dataSource]="lstInviter" [fields]="fields" 
+                                  [showClearButton]="true" formControlName="invited_person" [allowFiltering]="true" (ngModelChange)="getInfoInvitedPerson($event, indexFirst)">
+                                </ejs-dropdownlist>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Nội dung làm việc -->
+                          <div class="col-sm-12 col-chirld" *ngIf="isShowGuestcalendar">
+                            <div class="form-group">
+                              <div class="e-float-input">
+                                <textarea type="text" id="job_description" name="job_description" formControlName="job_description" maxlength="2000"
+                                  rows="3" style="height: 150px;"></textarea>
+                                <span class="e-float-line"></span>
+                                <label class="e-float-text" for="job_description">Nội dung làm việc</label>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 text-right mt-3">
+                    <!-- Button accompanying_vehicle/ people -->
+                    <button class="accompanying_vehicle" [disabled]="!isActivated[indexFirst]" (click)="accompanying_vehicle_manageShow(indexFirst)">Quản lý xe đi cùng</button>
+                    <button class="accompanying_people" [disabled]="!isActivated[indexFirst]" (click)="accompanying_person_manageShow(indexFirst)">Quản lý người đi cùng</button>
+                    <!-- Button back__btn/ save__btn -->
+                    <button class="back__btn" (click)="clear(indexFirst)">Hủy bỏ</button>
+                    <button class="save__btn"  (click)="saveData(indexFirst)">Lưu thông tin</button>
+                    <!-- <button class="save__btn" [disabled]="!(isShowSave[indexFirst] && isClickTakePhoto[indexFirst])" (click)="saveData(indexFirst)">Lưu thông tin IN</button> -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Trường hợp có cả làn vào/ ra -->
+            <div class="row col-sm-12" style="padding: 0px 0px 20px 0px;" *ngIf="isCase234[indexFirst]" [@collapseAnimation]="isCollapsedList[indexFirst] ? 'closed' : 'open'">
+              <!-- Làn vào right-border-->
+              <div class="col-sm-6 col-chirld ">
+                <div class="row">
+                  <div class="col-sm-12" style="padding: 0px !important;">
+                    <div class="row">
+                      <!-- Image camera / IN-->
+                      <div class="col-sm-6 padding-4" *ngFor="let lanein of item.listIn; let index = index" style="position: relative;">
+                        <div class="on_drag_camera" draggable="true" (dragstart)="onDragStart($event, index, 'in')" (dragover)="onDragOver($event)" (drop)="onDrop($event, indexFirst, index, 'in')">
+                          <div class="image_multi_camera">
+                            <div class="image_chirld_camera">
+                              <div class="fp-Video">
+                                <img id="cameralanein{{indexFirst}}{{index}}" [src]="lanein.http_link" class="display" style="cursor: grabbing;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Button lane in -->
+                      <div  style="position: absolute;top: 15.4rem;right: 8px;background-color: #fff;height: 34px;border: 1px solid #000;border-radius: 6px;">
+                        <div style="text-align: right;" (click)="takePhotoLaneIn(indexFirst)">
+                          <button class="person_capture_btn btn-action">
+                            <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red;"></i>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12" [formGroup]="form.get('groups').controls[indexFirst]" style="padding: 0px !important;">
+                    <div class="row">
+                      <!-- Hình ảnh xe vào -->
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="overview_in_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('overview_in_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="car_in_img">Hình ảnh xe vào</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="identification_in_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('identification_in_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="detail_in_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('detail_in_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Hình ảnh xe vào -->
+                      <div class="col-sm-12">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px;">
+                          </div>
+                        </div>
+                      </div>
+                      <!-- In/ Out Car -->
+                      <div class="col-sm-2" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;" *ngIf="isLanein[indexFirst]">XE VÀO 
+                        <i class="fa fa-arrow-up" aria-hidden="true" style="color: #82f98e; font-size: 30px;"></i> </div>
+                      <div class="col-sm-2 text-right" style="font-weight: bold; margin-top: 27px; color: #de222a;" *ngIf="isLanein[indexFirst]">
+                        {{form.get('groups').controls[indexFirst].get('license_in').value}}
+                      </div>
+                      <div class="col-sm-8"></div>
+                    </div>
+                    <div class="row">
+                      <!-- Entry information -->
+                      <div class="col-sm-12" style="font-weight: bold; margin-bottom: 10px;">THÔNG TIN NGƯỜI VÀO</div>
+                      <!-- Hình ảnh vào -->
+                      <div class="col-sm-3">
+                        <div class="form-group">
+                          <div class="e-float-input lable-register">
+                            Hình ảnh vào
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Loại giấy tờ -->
+                      <div class="col-sm-3 col-chirld">
+                        <div class="form-group">
+                          <div class="e-float-input lable-register">
+                            Loại giấy tờ
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Identification -->
+                      <div class="col-sm-6">
+                        <div class="form-group">
+                          <div class="e-float-input lable-register">
+                            Giấy tờ tùy thân
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Hình ảnh vào -->
+                      <div class="col-sm-3">
+                        <!-- Ảnh người vào/ người ra-->
+                        <div class="row">
+                          <!-- Photo of person entering -->
+                          <div class="col-sm-12 col-chirld">
+                            <div class="image_person_entering" style="position: relative;">
+                              <div class="person_entering_photo_top">
+                                <div class="upload-file-area green"
+                                      style="margin-top: 0px; margin-bottom: 0px; height: 240px;"
+                                      (click)="takeAPhotoForImgIn(indexFirst)"
+                                      *ngIf="!form.get('groups').controls[indexFirst].get('img_in').value">
+                                  <img src="/assets/images/caputure_avata.png" style="width: 100%; height: 100%; margin-top: 0px;" />
+                                </div>
+                                <img [src]="form.get('groups').controls[indexFirst].get('img_in').value"
+                                      *ngIf="form.get('groups').controls[indexFirst].get('img_in').value" style="width: 100%; height: 100%;" />
+                                <span *ngIf="
+                                    form.get('groups').controls[indexFirst].get('img_in').value &&
+                                    form.get('groups').controls[indexFirst].get('img_in').value !== '/assets/images/caputure_avata.png'" 
+                                    style="
+                                      position: absolute;
+                                      top: 0px;
+                                      right: 5px;
+                                      cursor: pointer;">
+                                  <i class="fa fa-remove" (click)="removeImage('img_in', indexFirst)"></i></span>
+                              </div>
+                              <div class="custom-file mt-15" style="display: none">
+                                <input style="display: none;" type="file" #imgin id="img_in{{indexFirst}}" accept=".png, .jpg, .jpeg"
+                                (change)="uploadImgIn($event, indexFirst)" />
+                              </div>
+                              <!-- Photo of person entering button-->
+                              <div style="position: absolute;top: 12.4rem;right: 6px;background-color: #fff;height: 34px;border: 1px solid #000;border-radius: 6px;">
+                                <button class="person_capture_btn btn-action" (click)="takeAPhotoForImgIn(indexFirst)">
+                                  <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red"></i>
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Loại giấy tờ -->
+                      <div class="col-sm-3 col-chirld">
+                        <!-- Row Radio Button-->
+                        <div class="row">
+                          <div class="col-sm-6 col-chirld" *ngFor='let documenttype of documenttypes; let indexRadio = index'>
+                            <div class="form-group">
+                              <ejs-radiobutton [label]="documenttype" [value]="documenttype" [name]="'documenttype' + indexFirst"
+                                               [formControlName]="'documenttype'" (change)="onRadioButtonClick($event.value, indexFirst)"></ejs-radiobutton>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Identification -->
+                      <div class="col-sm-6">
+                        <div class="row">
+                          <!-- Identification Image-->
+                          <div class="col-sm-12 col-chirld">
+                            <div class="image_identification" style="position: relative;">
+                              <div class="identification_top">
+                                <div class="upload-file-area green"
+                                     style="margin-top: 0px; margin-bottom: 0px; height: 240px;"
+                                     (click)="takeAPhotoForIdentification(indexFirst)"
+                                     *ngIf="!form.get('groups').controls[indexFirst].get('identification').value">
+                                  <img src="/assets/images/capture_paper.png" style="width: 100%; height: 100%; margin-top: 0px;" />
+                                </div>
+                                <img [src]="form.get('groups').controls[indexFirst].get('identification').value"
+                                     *ngIf="form.get('groups').controls[indexFirst].get('identification').value" style="width: 100%; height: 100%;" />
+                                <span *ngIf="
+                                    form.get('groups').controls[indexFirst].get('identification').value &&
+                                    form.get('groups').controls[indexFirst].get('identification').value !== '/assets/images/capture_paper.png'" 
+                                    style="
+                                      position: absolute;
+                                      top: 0px;
+                                      right: 5px;
+                                      cursor: pointer;">
+                                  <i class="fa fa-remove" (click)="removeImage('identification', indexFirst)"></i></span>
+                              </div>
+                              <div class="custom-file mt-15" style="display: none">
+                                <input style="display: none;" type="file" #identification id="identification{{indexFirst}}" accept=".png, .jpg, .jpeg"
+                                (change)="uploadIdentification($event, indexFirst)" />
+                              </div>
+                              <!-- Identification Button-->
+                              <div style="position: absolute;top: 12.4rem;right: 6px;background-color: #fff;height: 34px;border: 1px solid #000;border-radius: 6px;">
+                                <button class="person_capture_btn btn-action" (click)="takeAPhotoForIdentification(indexFirst)">
+                                  <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red"></i>
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Nhập số giấy tờ -->
+                      <div class="col-sm-6" >
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <div class="e-float-input lable-register search-container">
+                              <input type="text" #searchFocus formControlName="searchValue" [placeholder]="'Nhập số giấy tờ...'" (keypress)="searchValueEnter($event, indexFirst, 'true')" (blur)="clearDataWhenSeachValueNull($event.target.value, indexFirst)" (input)="onSuggestId($event.target.value, indexFirst)">
+                              <ul *ngIf="form.get('groups.' + indexFirst + '.searchResults')?.value?.length > 0">
+                                <li *ngFor="let result of form.get('groups.' + indexFirst + '.searchResults')?.value" (click)="selectSuggestion(result, indexFirst)">
+                                  {{ result }}
+                                </li>
+                              </ul>
+                              <i class="fa fa-search" aria-hidden="true" (click)="searchByInputDocument(indexFirst, 'true')"></i>
+                            </div>
+                            <label class="e-float-text" for="note">Tìm kiếm theo số giấy tờ</label>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Nhập số giấy tờ -->
+                      <div class="col-sm-6" style="padding-left: 10px;">
+                        <div class="row" style="height: 24px;">
+                        </div>
+                        <div class="row">
+                          <!-- Số giấy tờ -->
+                          <div class="col-sm-3 col-chirld" style="margin-top: 15px;">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                Số giấy tờ 
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-9 col-chirld" style="margin-top: 15px;">
+                            <div class="form-group">
+                              <div class="e-float-input lable-register">
+                                <input type="text" id="document_number" name="document_number" formControlName="document_number" maxlength="255" (blur)="checkInSystem($event.target.value, indexFirst)"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="row">
+                          <div class="col-sm-6 col-chirld col-left">
+                            <div class="row">
+                               <!-- Địa chỉ -->
+                               <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowAddress">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Địa chỉ
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowAddress">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <input type="text" id="address" name="address" formControlName="address" maxlength="255"/>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 col-chirld col-right">
+                            <div class="row">
+                               <!-- Loại ra vào -->
+                               <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowEmployeeType">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Loại ra vào
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowEmployeeType">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <ejs-dropdownlist id="employee_type" [dataSource]="lstEmployeeType" [fields]="fields" [showClearButton]="true" 
+                                      formControlName="employee_type" [allowFiltering]="true" (ngModelChange)="changeEmployeeType(indexFirst)">
+                                    </ejs-dropdownlist>
+                                  </div>
+                                </div>
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-sm-6 col-chirld col-left">
+                            <div class="row">
+                               <!-- Họ tên -->
+                               <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowAddress">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Họ tên
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowAddress">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <input type="text" id="full_name" name="full_name" formControlName="full_name" maxlength="255"/>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 col-chirld col-right">
+                            <div class="row">
+                               <!-- Điện thoại -->
+                               <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowEmployeeType">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Điện thoại
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowEmployeeType">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <input type="text" id="phone_number" name="phone_number" formControlName="phone_number" maxlength="255"/>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12">
+                        <div class="row">
+                          <div class="col-sm-6 col-chirld col-left">
+                            <div class="row"> 
+                              <!-- Info -->
+                              <div class="col-sm-12 col-chirld" *ngIf="isShowList[indexFirst]">
+                                <div class="row">
+                                  <!-- Chức vụ -->
+                                  <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        Chức vụ
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        <input type="text" id="job_title_name" name="job_title_name" formControlName="job_title_name" disabled />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Phòng ban -->
+                                  <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        Phòng ban
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-9 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        <input type="text" id="department" name="department" formControlName="department" disabled />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Giữ giấy tờ -->
+                                  <div class="col-sm-3 col-chirld" style="margin-top: 15px;">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        Giữ giấy tờ
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-2 col-chirld" style="margin-top: 15px;">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        <ejs-checkbox label="" formControlName="document_keep" (change)="onCheckboxChange($event, indexFirst)"></ejs-checkbox>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- Đã trả giấy tờ -->
+                                  <div class="col-sm-3 col-chirld" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        Đã trả giấy tờ
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-2 col-chirld" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register">
+                                        <ejs-checkbox label="" formControlName="document_return"></ejs-checkbox>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-2 col-chirld" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register text-right">
+                                        <div class="custom-file mt-15" style="display: none">
+                                          <input style="display: none;" type="file" #documentreturnimg id="document_return_img{{indexFirst}}" accept=".png, .jpg, .jpeg"
+                                          (change)="uploadDocumentReturn($event, indexFirst)" />
+                                        </div>
+                                        <div class="hover_image">
+                                          <span *ngIf="isShowIconUpload[indexFirst]" (click)="takeAPhotoForDocumentReturn(indexFirst)">
+                                            <i class="fa fa-upload upload_icon fa-2x" style="color: #000000;"></i>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-12 col-chirld text-right" style="margin-top: 15px;" *ngIf="isKeepCheck[indexFirst]">
+                                    <div class="form-group">
+                                      <div class="e-float-input lable-register text-right">
+                                        <div class="hover_image">
+                                          <span (click)="downloadImage(indexFirst)">{{imageDocumentReturnName[indexFirst]}}</span>
+                                          <span *ngIf="isShowIconDelete[indexFirst]" style="padding-left: 5px;">
+                                            <i class="fa fa-trash fa-2x" style="color: red" (click)="removeImage('document_return_img', indexFirst)"></i>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                    <!-- Thông tin đi cùng -->
+                                    <div class="col-sm-12 col-chirld" *ngIf="isShowGuestcalendar">
+                                      <div class="form-group">
+                                        <div class="e-float-input">
+                                          <textarea type="text" id="participant_information" name="participant_information" formControlName="participant_information" maxlength="2000"
+                                            rows="3" style="height: 114px;"></textarea>
+                                          <span class="e-float-line"></span>
+                                          <label class="e-float-text" for="participant_information">Thông tin đi cùng</label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-sm-6 col-chirld col-right">
+                            <div class="row" *ngIf="isShowList[indexFirst]"> 
+                              <!-- Khách mời đã đặt lịch -->
+                              <div class="col-sm-5 col-chirld" style="margin-top: 15px;" *ngIf="isShowGuestcalendar">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Khách mời đã đặt lịch
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-7 col-chirld" style="margin-top: 15px;" *ngIf="isShowGuestcalendar">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <ejs-dropdownlist id="invited_guest" [dataSource]="lstGuestcalendar" [fields]="fields" 
+                                      [showClearButton]="true" formControlName="invited_guest" [allowFiltering]="true" (ngModelChange)="getInfoGuestsBookedAppointments(indexFirst)">
+                                    </ejs-dropdownlist>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- Người làm việc -->
+                              <div class="col-sm-5 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    Người làm việc
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-sm-7 col-chirld" style="margin-top: 15px;" *ngIf="isShowInvitedPerson">
+                                <div class="form-group">
+                                  <div class="e-float-input lable-register">
+                                    <ejs-dropdownlist id="invited_person" [dataSource]="lstInviter" [fields]="fields" 
+                                      [showClearButton]="true" formControlName="invited_person" [allowFiltering]="true" (ngModelChange)="getInfoInvitedPerson($event, indexFirst)">
+                                    </ejs-dropdownlist>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- Nội dung làm việc -->
+                              <div class="col-sm-12 col-chirld" *ngIf="isShowGuestcalendar">
+                                <div class="form-group">
+                                  <div class="e-float-input">
+                                    <textarea type="text" id="job_description" name="job_description" formControlName="job_description" maxlength="2000"
+                                      rows="3" style="height: 150px;"></textarea>
+                                    <span class="e-float-line"></span>
+                                    <label class="e-float-text" for="job_description">Nội dung làm việc</label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-12 text-right mt-3">
+                        <!-- Button accompanying_vehicle/ people -->
+                        <button class="accompanying_vehicle" [disabled]="!isActivated[indexFirst]" (click)="accompanying_vehicle_manageShow(indexFirst)">Quản lý xe đi cùng</button>
+                        <button class="accompanying_people" [disabled]="!isActivated[indexFirst]" (click)="accompanying_person_manageShow(indexFirst)">Quản lý người đi cùng</button>
+                        <!-- Button back__btn/ save__btn -->
+                        <button class="back__btn" (click)="clear(indexFirst)">Hủy bỏ</button>
+                        <button class="save__btn" [disabled]="!(isShowSave[indexFirst] && isClickTakePhoto[indexFirst])" (click)="saveData(indexFirst)">Lưu thông tin</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Làn ra -->
+              <div class="col-sm-6 col-chirld">
+                <div class="row">
+                  <div class="col-sm-12" style="padding: 0px !important;">
+                    <div class="row">
+                      <!-- Image camera / OUT-->
+                      <div class="col-sm-6 padding-4" *ngFor="let laneout of item.listOut; let index = index" style="position: relative;">
+                        <div class="on_drag_camera" draggable="true" (dragstart)="onDragStart($event, index, 'out')" (dragover)="onDragOver($event)" (drop)="onDrop($event, indexFirst, index, 'out')">
+                          <div class="image_multi_camera">
+                            <div class="image_chirld_camera">
+                              <div class="fp-Video">
+                                <img id="cameralaneout{{indexFirst}}{{index}}" [src]="laneout.http_link" class="display" style="cursor: grabbing;"/>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Button lane out -->
+                      <div style="position: absolute;top: 15.4rem;right: 7px;background-color: #fff;height: 34px;border: 1px solid #000;border-radius: 6px;">
+                        <div style="text-align: right;" (click)="takePhotoLaneOut(indexFirst)">
+                          <button class="person_capture_btn btn-action">
+                            <span><i class="fa fa-camera fa-2x" style="font-size: 1.5em;color: red"></i>
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12" [formGroup]="form.get('groups').controls[indexFirst]" style="padding: 0px !important;">
+                    <div class="row">
+                      <!-- Hình ảnh xe ra -->
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="overview_out_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('overview_out_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="car_out_img">Hình ảnh xe ra</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="identification_out_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('identification_out_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="detail_out_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('detail_out_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- Hình ảnh xe vào -->
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="overview_inout_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('overview_inout_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="car_in_img">Hình ảnh xe vào</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="identification_inout_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('identification_inout_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 padding-4">
+                        <div class="form-group">
+                          <div class="e-float-input" style="width: 100%; height: 150px; background-color: #c2bcbc;">
+                            <img id="detail_inout_img{{indexFirst}}" [src]="form.get('groups').controls[indexFirst].get('detail_inout_img').value" class="display"/>
+                            <span class="e-float-line"></span>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- In/ Out Car -->
+                      <div class="col-sm-2" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;" *ngIf="isLanein[indexFirst]">XE VÀO 
+                        <i class="fa fa-arrow-up" aria-hidden="true" style="color: #82f98e; font-size: 30px;"></i> </div>
+                      <div class="col-sm-2 text-right" style="font-weight: bold; margin-top: 27px; color: #de222a;" *ngIf="isLanein[indexFirst]">
+                        {{licenseinout[indexFirst]}}
+                      </div>
+                      <div class="col-sm-2" style="font-weight: bold; margin-top: 20px; margin-bottom: 20px;" *ngIf="isLaneout[indexFirst]">XE RA
+                        <i class="fa fa-arrow-down" aria-hidden="true" style="color: #ec808d; font-size: 30px;"></i> </div>
+                      <div class="col-sm-2 text-right" style="font-weight: bold; margin-top: 27px; color: #de222a;" *ngIf="isLaneout[indexFirst]">
+                        {{form.get('groups').controls[indexFirst].get('license_out').value}}
+                      </div>
+                      <div class="col-sm-4" style="text-align: right; margin-top: 15px;" *ngIf="isCorrect[indexFirst]">
+                        <button class="correct_information">ĐÚNG THÔNG TIN</button>
+                      </div>
+                      <div class="col-sm-4" style="text-align: left; margin-top: 15px;" *ngIf="isIncorrect[indexFirst]">
+                        <button class="incorrect">KHÔNG ĐÚNG</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="line-content">
+        </div>
+      </div>
+      <!-- Content after register  -->
+      <div class="row full-width">
+        <h5 class="title">Tìm kiếm</h5>
+        <div class="card card-content-design">
+          <div class="main-toolbar">
+            <div class="row">
+              <div class="col-sm-11 p-n custom-btn-toolbar">
+                <!-- Biển số xe  -->
+                <div class="form-group mgl-1">
+                  <div class="e-float-input">
+                    <input class="searchText" type="text" id="text" name="text"
+                      [placeholder]="'Biển số xe'" [(ngModel)]="search.license_no" maxlength="255"
+                      [ngModelOptions]="{ standalone: true }" (keypress)="searchListEnter($event)" />
+                    <label class="e-float-text" for="text">Biển số xe</label>
+                  </div>
+                </div>
+                <!-- Họ và tên  -->
+                <div class="form-group mgl-1">
+                  <div class="e-float-input">
+                    <input class="searchText" type="text" id="text" name="text"
+                      [placeholder]="'Họ và tên'" [(ngModel)]="search.full_name" maxlength="255"
+                      [ngModelOptions]="{ standalone: true }" (keypress)="searchListEnter($event)" />
+                    <label class="e-float-text" for="text">Họ và tên</label>
+                  </div>
+                </div>
+                <!-- Loại -->
+                <div class="form-group mgl-1">
+                  <div class="e-float-input width-90">
+                    <ejs-dropdownlist id="employee_type" [dataSource]="lstEmployeeType" [fields]="fields"
+                      [(ngModel)]="search.employee_type" placeholder="Chọn loại" [showClearButton]="true" [allowFiltering]="true" (ngModelChange)="employeeTypeChange()">
+                    </ejs-dropdownlist>
+                    <label class="e-float-text" for="employee_type">Loại</label>
+                  </div>
+                </div>
+                <!-- Button Search -->
+              </div>
+              <div class="col-sm-1 p-n">
+                <div class="form-group">
+                  <div class="e-float-input m-t-0 bg">
+                    <button class="btn btn-search" (click)="getListData()">
+                      Tìm kiếm
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Grid -->
+      <div class="card-main-content">
+        <div class="list-grid">
+          <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+            [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+            [height]="configs.height()" allowResizing="true" [locale]="configs.currentLang"
+            [allowSelection]="true" [selectionSettings]="configs.selectionSettings"
+            (dataStateChange)="dataStateChange($event)"
+            [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+            [allowTextWrap]="true" [textWrapSettings]="configs.wrapSettings">
+            <e-columns>
+              <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+              <!-- Index -->
+              <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                width="70">
+                <ng-template #template let-data>
+                  <span>{{ formatStt(data.index) }}</span>
+                </ng-template>
+              </e-column>
+              <!-- Thời gian vào -->
+              <e-column field="time_in" textAlign="Left" headerTextAlign="Center" headerText="Thời gian vào" width="110">
+              </e-column>
+              <!-- Thời gian ra -->
+              <e-column field="time_out" textAlign="Left" headerTextAlign="Center" headerText="Thời gian ra" width="110">
+              </e-column>
+              <!-- Biển số xe -->
+              <e-column field="license_no" textAlign="Left" headerTextAlign="Center" headerText="Biển số xe" width="110">
+              </e-column>
+              <!-- Loại -->
+              <e-column field="employee_name" textAlign="Left" headerTextAlign="Center" headerText="Loại" width="110">
+              </e-column>
+              <!-- Người vào/ ra -->
+              <e-column field="full_name" textAlign="Left"  headerTextAlign="Center" headerText="Người vào/ ra" width="110">
+              </e-column>
+              <!-- Điện thoại -->
+              <e-column field="phone_number" textAlign="Left"  headerTextAlign="Center" headerText="Điện thoại" width="110">
+              </e-column>
+              <!-- Người mời -->
+              <e-column field="invited_person" textAlign="Left"  headerTextAlign="Center" headerText="Người mời" width="110">
+              </e-column>
+              <!-- Show view, edit, delete -->
+              <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Thao tác" width="120">
+                <ng-template #template let-data>
+                  <div class="row">
+                    <div class="col-sm-12 custom-tools">
+                      <ejs-tooltip content="Xem" target="#view" *ngIf="checkToolbar('VIEW')">
+                        <span id="view" (click)="clickRecord(data, 'view')">
+                          <i class="fa fa-eye view" aria-hidden="true"></i>
+                        </span>
+                      </ejs-tooltip>
+                      <ejs-tooltip content="Sửa" target="#edit" *ngIf="checkToolbar('EDIT')">
+                        <span id="edit" (click)="clickRecord(data, 'edit')">
+                          <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                        </span>
+                      </ejs-tooltip>
+                    </div>
+                  </div>
+                </ng-template>
+              </e-column>
+            </e-columns>
+          </ejs-grid>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FORM ADD/ EDIT người đi cùng-->
+<accompanying-person-manage-modals *ngIf="equipmentDetailFlg" id="accompanying-person-manage" (closeModal)="receiveData($event, 'person')" [dataFromParent]="dataToModal">
+</accompanying-person-manage-modals>
+
+<!-- FORM ADD/ EDIT xe đi cùng-->
+<accompanying-vehicle-manage-modals *ngIf="vehicleDetailFlg" id="accompanying-vehicle-manage" (closeModal)="receiveData($event,'vehicle')"  [dataFromParent]="dataToModal">
+</accompanying-vehicle-manage-modals>

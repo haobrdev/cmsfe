@@ -1,0 +1,62 @@
+cms-inforleaving-edit {
+  .image_portrait_photo{
+    width: 70%; 
+    margin: 50px auto 0;
+  }
+
+  .portrait_photo_top{
+    position: relative;
+    padding: 20px;
+    background-color: #CCCCCC;
+    height: 500px;
+  }
+
+  //CSS SAVE BTN
+  .capture_btn {
+    padding: 1px 18px;
+    background: no-repeat padding-box #A30014;
+    text-align: left;
+    font: normal normal bold 16px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #fff;
+    border: none;
+    border-radius: 3px !important;
+    opacity: 1;
+    height: 36px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .image_photo_footer{
+    position: relative;
+  }
+
+  .image_photo_top{
+    padding: 20px;
+    background-color: #CCCCCC;
+  }
+
+  .upload_icon {
+    color: #1D6787 !important;
+    font-size: 24px !important;
+  }
+
+  .upload_btn {
+    padding: 1px 18px;
+    background: no-repeat padding-box #fff;
+    text-align: left;
+    font: normal normal bold 16px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #1D6787;
+    border: none;
+    border-radius: 3px !important;
+    opacity: 1;
+    height: 36px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}

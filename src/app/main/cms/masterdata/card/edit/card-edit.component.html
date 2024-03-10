@@ -1,0 +1,145 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI THÔNG TIN THẺ</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">CẬP NHẬT THÔNG TIN THẺ</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">CHI TIẾT THÔNG TIN THẺ</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Card_id -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="card_id" name="card_id" formControlName="card_id" [(ngModel)]="model.card_id" maxlength="255" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="card_id">Mã thẻ</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('card_id').hasError('required') &&!editForm.get('card_id').untouched">
+                          Trường mã thẻ bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('card_id').hasError('maxlength') && !editForm.get('card_id').untouched">
+                          Mã thẻ không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Card_type -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="card_type" [dataSource]="lstTypeCard"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.card_type"
+                          formControlName="card_type" [allowFiltering]="true" (ngModelChange)="changeModel()">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="card_type">Loại thẻ</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('card_type').hasError('required') &&!editForm.get('card_type').untouched">
+                          Trường loại thẻ bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>                  
+                  <!-- Card_user -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="card_user" [dataSource]="lstUserByOrganizations"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.card_user"
+                          formControlName="card_user" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="card_user">Người sử dụng</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('card_user').hasError('required') &&!editForm.get('card_user').untouched">
+                          Trường người sử dụng bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                 
+                  <!-- Status -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="status" [dataSource]="lstStatusCard"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.status"
+                          formControlName="status" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="status">Trạng thái</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Number_card -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="number_card" name="number_card" formControlName="number_card" [(ngModel)]="model.number_card" maxlength="9" onkeydown="return ( event.ctrlKey || event.altKey 
+                        || (47<event.keyCode && event.keyCode<58 && event.shiftKey==false) 
+                        || (95<event.keyCode && event.keyCode<106)
+                        || (event.keyCode==8) || (event.keyCode==9) 
+                        || (event.keyCode>34 && event.keyCode<40) 
+                        || (event.keyCode==46) )"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="number_card">Số lượng thẻ</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('number_card').hasError('required') &&!editForm.get('number_card').untouched">
+                          Trường số lượng thẻ bắt buộc nhập
+                        </span>
+                        <!-- *ngIf="editForm.get('number_card').hasError('min') && !editForm.get('number_card').untouched" -->
+                        <span class="input-error"
+                                  *ngIf =" !(model.number_card >= 0)  ">
+                                  Số lượng thẻ không được là số âm
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Date_range -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-datepicker id="date_range" name="date_range" formControlName="date_range"
+                          [(ngModel)]="model.date_range" format="dd/MM/yyyy"></ejs-datepicker>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="date_range">Ngày cấp</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Note -->
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <textarea type="text" id="note" name="note" formControlName="note" maxlength="2000"
+                          [(ngModel)]="model.note" rows="3"></textarea>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="note">Mô tả</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu thông tin</button>
+              </div>
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState == 'view'">
+                <button class="back__btn " (click)="back()">Quay lại</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

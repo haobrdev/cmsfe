@@ -1,0 +1,125 @@
+cms-action {
+  .form-control {
+    height: 32px;
+  }
+ 
+  button.vthh {
+    margin-right: 8px;
+  }
+  .toolGrid {
+    cursor: pointer;
+  }
+  .toolGrid:hover {
+    color: #4285F4;
+  }
+  .app-main-content
+    .app-container
+    .app-content
+    .app-filter
+    .row.button-action
+    button.btn.btn-primary {
+    font-size: 10px;
+    height: 25px;
+  }
+  .app-main-content
+    .app-container
+    .app-content
+    .app-filter
+    .app-filter-advance
+    .form-group.filter
+    span {
+    padding-right: 0px;
+    font-size: 14px;
+  }
+  .p-r-15 {
+    padding-right: 15px !important;
+  }
+  .status-quit-work {
+    color: red !important;
+  }
+  @media only screen and (max-width: 1599px) and (min-width: 1000px) {
+    .app-container .app-content.list_document {
+      padding-top: 265px !important;
+    }
+  }
+  @media only screen and (min-width: 1600px) {
+    .app-content.list_document {
+      padding-top: 250px !important;
+    }
+  }
+}
+.app-main-content .app-container .card-content ul.card-inline li {
+  padding-right: 3px;
+}
+
+app-confirm-modal#confirm-change-pass-modal {
+  div.form-group {
+    border-radius: 3px;
+    margin-bottom: 5px !important;
+    input {
+      font-size: 14px;
+      font-family: "cms-font";
+      line-height: 16px;
+      color: #6c757d;
+      height: 45px;
+      margin-top: 13px;
+      background: #f2f5fa;
+      outline: none;
+      box-shadow: none;
+    }
+    .e-float-input {
+      margin-top: 20px !important;
+    }
+    .fallpass {
+      border: 1px solid red !important;
+    }
+  }
+  input.ng-pristine.ng-invalid.ng-touched {
+    border: 1px solid red;
+  }
+  label.e-float-text.required:after {
+    content: " *";
+    color: red;
+  }
+  label.e-float-text.required {
+    position: absolute;
+    top: 30%;
+  }
+  .eye {
+    position: absolute;
+    top: 38%;
+    left: 93%;
+    cursor: pointer;
+  }
+  .btn-cancel-default:focus {
+    background-color: burlywood;
+  }
+}
+
+app-confirm-modal .app-modal .app-modal-body {
+  padding: 15px;
+  background: #fff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  margin: 15% 39%;
+  position: relative;
+  width: 35rem !important;
+}
+
+.action-ico-exclamation-triangle
+{
+  font-size: x-large !important;
+  color: red;
+  margin-right: 6px;
+}
+.action-modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center !important;
+  padding:0.75rem 0rem 0rem 0rem  ;
+}
+.action-btn-default {
+  height: 35px!important;
+  font-size: 14px!important;
+}

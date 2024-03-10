@@ -1,0 +1,175 @@
+<div class="app-main-content">
+    <div class="app-container">
+      <div class="app-toolbar">
+        <div class="card card-content">
+          <div class="card-main-header">
+            <img src="/assets/images/list-icon.png" />
+            <span class="card-main-title">DANH SÁCH THÔNG TIN XE</span>
+          </div>
+          <div class="row full-width">
+            <h5 class="title">Tìm kiếm</h5>
+            <div class="card card-content-design card-car">
+              <div class="main-toolbar">
+                <div class="row">
+                  <div class="col-sm-12 p-n" style="padding-right: 5px !important">
+                    <div  class="row">
+                      <div class="col-xl-3 col-lg-3  col-md-12  col-xs-12 col-sm-12">
+                          <!-- Biển số xe  -->
+                          <div class="form-group mgl-1">
+                            <div class="e-float-input">
+                            <input class="searchText" type="text" id="text" name="text" [placeholder]="'Nhập biển số xe'"
+                                [(ngModel)]="search.license_no" [ngModelOptions]="{ standalone: true }"
+                                (keypress)="searchListEnter($event)" />
+                                <label class="e-float-text" for="text">Biển số xe</label>
+                            </div>
+                          </div>
+                      </div>
+                      <div class="col-xl-3 col-lg-3  col-md-12  col-xs-12 col-sm-12">
+                          <!-- Loại biển -->
+                          <div class="form-group mgl-1">
+                            <div class="e-float-input ">
+                            <ejs-dropdownlist id="license_type" [dataSource]="lstLicenseTypes" [fields]="fields" [popupWidth]="200"
+                                [(ngModel)]="search.license_type" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                                [allowFiltering]="true" (filtering)="onFiltering($event, lstLicenseTypes)" [showClearButton]="true"
+                                placeholder="Loại biển" (change)="changeModel()"
+                                (ngModelChange)="changeModel()">
+                            </ejs-dropdownlist>
+                            <label class="e-float-text" for="text">Loại biển</label>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-xl-3 col-lg-3  col-md-12  col-xs-12 col-sm-12">
+                         <!-- Phương tiện -->
+                          <div class="form-group mgl-1">
+                            <div class="e-float-input ">
+                            <ejs-dropdownlist id="vehicle" [dataSource]="lstVehicles" [fields]="fields" [popupWidth]="200"
+                                [(ngModel)]="search.vehicle" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                                [allowFiltering]="true" (filtering)="onFiltering($event, lstVehicles)" [showClearButton]="true"
+                                placeholder="Phương tiện" (change)="changeModel()"
+                                (ngModelChange)="changeModel()">
+                            </ejs-dropdownlist>
+                            <label class="e-float-text" for="text">Phương tiện</label>
+                            </div>
+                        </div>    
+                      </div>
+                      <div class="col-xl-3 col-lg-3  col-md-12  col-xs-12 col-sm-12">
+                         <!-- Loại xe -->
+                        <div class="form-group mgl-1">
+                          <div class="e-float-input ">
+                          <ejs-dropdownlist id="range_of_vehicle" [dataSource]="lstRangeOfVehicles" [fields]="fields" [popupWidth]="200"
+                              [(ngModel)]="search.range_of_vehicle" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                              [allowFiltering]="true" (filtering)="onFiltering($event, lstRangeOfVehicles)" [showClearButton]="true"
+                              placeholder="Loại xe" (change)="changeModel()"
+                              (ngModelChange)="changeModel()">
+                          </ejs-dropdownlist>
+                          <label class="e-float-text" for="text">Loại xe</label>
+                          </div>
+                      </div>   
+
+                      </div>
+                      <div class="col-xl-9 col-lg-9  col-md-9  col-xs-12 col-sm-12">
+                      </div>
+                      <div class="col-xl-3 col-lg-3  col-md-3  col-xs-12 col-sm-12">
+                        <div class="e-float-input m-t-0 bg" style="width: 110px;float: right;">
+                          <button class="btn btn-search" (click)="getListData()">
+                            Tìm kiếm
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row full-width">
+            <div class="col-sm-12 main-toolbar">
+              <button id="add" class="btn-action {{ itemButton.iconColorClass }}" (click)="clickToolbar(itemButton)"
+                *ngFor="let itemButton of toolbar" [disabled]="itemButton.isDisable === true">
+                <span><i class="fa {{ itemButton.prefixIcon }}"></i></span>
+                <span class="text-center">{{ itemButton.text }}</span>
+              </button>
+            </div>
+          </div>
+          <div class="card-main-content">
+            <div class="list-grid">
+              <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+                [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+                [height]="configs.height()"  allowResizing="true" [locale]="configs.currentLang"
+                [allowSelection]="true"  [selectionSettings]="configs.selectionSettings"
+                 (dataStateChange)="dataStateChange($event)"
+                [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+                (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)" [allowTextWrap]="true"
+                [textWrapSettings]="configs.wrapSettings">
+                <e-columns>
+                  <e-column field="id"  [visible]="false" headerText="ID" width="130"
+                    [isPrimaryKey]="true" ></e-column>
+                  <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" 
+                    width="45">
+                    <ng-template #template let-data>
+                      <span>{{ formatStt(data.index) }}</span>
+                    </ng-template>
+                  </e-column>
+                  <e-column field="license_no" textAlign="Left" headerTextAlign="Center" headerText="Biển số xe" width="110">
+                  </e-column>
+                  <e-column field="license_type_name" textAlign="Left" headerTextAlign="Center" headerText="Loại biển" width="110">
+                  </e-column>
+                  <e-column field="vehicle_name" textAlign="Left" headerTextAlign="Center" headerText="Phương tiện" width="110">
+                </e-column>
+                <e-column field="range_of_vehicle_name" textAlign="Left" headerTextAlign="Center" headerText="Loại xe" width="110">
+                </e-column>
+                  <e-column field="car_owner_name" textAlign="Left" headerTextAlign="Center" headerText="Họ tên chủ xe" width="180">
+                </e-column>
+                  <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Thao tác"
+                    headerTextAlign="Center" width="100">
+                    <ng-template #template let-data>
+                      <div class="row">
+                        <div class="col-sm-12 custom-tools">
+                          <ejs-tooltip content="Xem" target="#view" *ngIf="checkToolbar('VIEW')">
+                            <span id="view" (click)="clickRecord(data, 'view')">
+                              <i class="fa fa-eye view" aria-hidden="true"></i>
+                            </span>
+                          </ejs-tooltip>
+                          <ejs-tooltip content="Sửa" target="#edit" *ngIf="checkToolbar('EDIT')">
+                            <span id="edit" (click)="clickRecord(data, 'edit')">
+                              <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                            </span>
+                          </ejs-tooltip>
+                          <ejs-tooltip content="Xóa" target="#delete" *ngIf="checkToolbar('DELETE')">
+                            <span id="delete" (click)="clickRecord(data, 'delete')">
+                              <i class="fa fa-trash delete" aria-hidden="true"></i>
+                            </span>
+                          </ejs-tooltip>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </e-column>
+                </e-columns>
+              </ejs-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  
+  
+<!-- CONFIRM DELETE ONE MODAL-->
+<app-confirm-modal id="confirm-delete-one-modal"  class="modal">
+  <div class="modal-body car-modal-body">
+    <span class="car-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Bạn có chắc chắn muốn xóa Xe <b style="color:red">
+        {{ modelDelete && modelDelete.license_no ? modelDelete.license_no : ""}}</b>&nbsp;này không?
+    </span> 
+  </div>
+  <div class="modal-footer car-modal-footer">
+    <button class="btn btn-primary m-r-8 car-btn-default" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default car-btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>

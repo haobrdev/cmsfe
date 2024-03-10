@@ -1,0 +1,162 @@
+#login {
+  label.e-float-text.required:after {
+    color: red;
+    content: " *";
+  }
+
+  width: 100%;
+  background-image: url('/assets/images/car-park-background.jpg');
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  height: 100vh;
+
+  #login-form-wrapper {
+    flex: 1 0 auto;
+    padding: 5% 32px;
+
+    #login-form {
+      width: 600px;
+    height: auto;
+    background: #FFFFFF;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.25);
+    border-radius: 4px;
+    margin: 5% auto;
+
+      .e-label, button, a {
+        font-family: "login-font", sans-serif  !important;
+        color: black;
+      }
+      // hoàn sửa login logo
+      .login-logo {
+        // padding-top: 30px;
+        margin-bottom: 15px;
+        height: 200px;
+        width: 200px;
+      }
+
+      .form-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 25px;
+      }
+
+      .signIn {
+        background-color: #4285F4;
+      }
+
+      .signIn-sso {
+        background-color: #34A853 !important;
+      }
+
+      .title {
+        position: relative;
+        font-family: "cms-font", sans-serif !important;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 26px;
+        font-weight: 600;
+        padding: 20px 34px 5px 33px;
+
+      }
+
+      .form-group {
+        width: 100%;
+        border-radius: 3px;
+        margin-bottom: 20px;
+        padding: 0 20px;
+        position: relative;
+
+        #username {
+          font-size: 14px;
+          line-height: 16px;
+          color: #6c757d;
+          height: 40px;
+          outline: none;
+          box-shadow: none;
+          border: 1px solid #e7e8ec;
+
+        }
+
+        #password {
+          font-size: 14px;
+          line-height: 16px;
+          color: #6c757d;
+          height: 40px;
+          outline: none;
+          box-shadow: none;
+          border: 1px solid #e7e8ec;
+        }
+
+        .show-pass {
+          position: absolute;
+          top: 7px;
+          right: 30px;
+          cursor: pointer;
+        }
+
+        .input-error {
+          margin-left: 5px;
+        }
+
+        input.ng-invalid.ng-touched {
+          border: 1px solid red !important;
+        }
+
+        button.button {
+          width: 130px;
+          height: 35px;
+          font-size: 14px;
+          background: #4285F4;
+
+          border-radius: 4px;
+          border: none;
+          outline: none;
+          color: #fff;
+          cursor: pointer;
+        }
+      }
+
+      a {
+        font-size: 14px;
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+        margin-right: 15px;
+        font-family: "login-font", sans-serif !important;
+      }
+
+      // hoàn thêm
+      .frmlgin {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}
+
+
+@media only screen and (min-width: 1000px) and (max-width: 1250px) {
+  #login {
+    #login-form-wrapper {
+      padding: 5% 32px;
+    }
+  }
+}
+
+@media only screen and (min-width: 1250px) {
+  #login {
+    #login-form-wrapper {
+      padding: 3% 32px;
+    }
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  #login {
+    #login-form-wrapper {
+      padding: 4.8% 32px;
+    }
+  }
+}

@@ -1,0 +1,90 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-toolbar">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/list-icon.png" />
+          <span class="card-main-title">DANH SÁCH NHẬN DIỆN BIỂN SỐ </span>
+        </div>
+        <div class="card-main-content">
+          <div class="list-grid">
+            <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+              [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+              [height]="configs.height()" allowResizing="true" [locale]="configs.currentLang"
+              [allowSelection]="true" [selectionSettings]="configs.selectionSettings" (dataStateChange)="dataStateChange($event)"
+              [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+              (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)" [allowTextWrap]="true"
+              [textWrapSettings]="configs.wrapSettings">
+              <e-columns>
+                <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                  [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                  width="40">
+                  <ng-template #template let-data>
+                    <span style="white-space: pre-line">{{ formatStt(data.index) }}</span>
+                  </ng-template>
+                </e-column>
+                <e-column textAlign="Left" headerTextAlign="Center" headerText="Thông tin xe"
+                  width="170">
+                  <ng-template #template let-data>
+                    <span>{{ data.vehicle_type}} <br> {{data.vehicle_color}} <br> {{data.ip_adrress}}</span>
+                  </ng-template>
+                </e-column>
+                <e-column field="io_time_full" textAlign="Right" headerTextAlign="Center" headerText="Thời gian"
+                  width="100">
+                </e-column>
+                <e-column textAlign="Center" headerTextAlign="Center" headerText="Ảnh toàn cảnh" width="240">
+                  <ng-template #template let-data>
+                    <div class="image">
+                        <img src={{data.overview_img}} alt="" style="max-width: 300px; max-height: 300px;"/>
+                    </div>
+                </ng-template>
+                </e-column>
+                <e-column field="license_img" textAlign="Center" headerTextAlign="Center" headerText="Ảnh biển số" width="240">
+                  <ng-template #template let-data>
+                    <div class="image">
+                        <img src={{data.license_img}} alt="" style="max-width: 300px; max-height: 300px;"/>
+                    </div>
+                </ng-template>
+                </e-column>
+                <e-column field="license_no" textAlign="Left" headerTextAlign="Center" headerText="Biển số nhận dạng được" width="100">
+                </e-column>
+                <e-column field="license_no_correct" textAlign="Left" headerTextAlign="Center" headerText="Biển số đúng" width="100">
+                  <ng-template #template let-data>
+                    <input [(ngModel)]="data.license_no_correct" name="license_no_correct" id="license_no_correct_{{data.index}}" style="max-width: 130px;">
+                </ng-template>
+                </e-column>
+                <e-column field="vehicle_color_correct" textAlign="Left" headerTextAlign="Center" headerText="Màu xe đúng" width="100">
+                  <ng-template #template let-data>
+                    <input [(ngModel)]="data.vehicle_color_correct" name="vehicle_color_correct" id="vehicle_color_correct_{{data.index}}" style="max-width: 130px;">
+                </ng-template>
+                </e-column>
+                <e-column field="status" textAlign="Center" clipMode="EllipsisWithTooltip" headerTextAlign="Center"
+                  headerText="Sai" width="50">
+                  <ng-template #template let-data>
+                    <ejs-checkbox label="" [checked]="data.status == 1" [disabled]="true">
+                    </ejs-checkbox>
+                  </ng-template>
+                  </e-column>
+                <!-- Show update -->
+                <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Cập nhật" width="50">
+                  <ng-template #template let-data>
+                    <div class="row">
+                      <div class="col-sm-12 custom-tools">
+                        <ejs-tooltip content="cập nhật">
+                          <span id="edit" (click)="clickRecord(data, 'edit' )">
+                            <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                          </span>
+                        </ejs-tooltip>
+                      </div>
+                    </div>
+                  </ng-template>
+                </e-column>
+              </e-columns>
+            </ejs-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

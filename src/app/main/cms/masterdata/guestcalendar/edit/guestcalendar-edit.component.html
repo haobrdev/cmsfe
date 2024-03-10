@@ -1,0 +1,158 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">ĐĂNG KÝ LỊCH MỜI KHÁCH</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">CẬP NHẬT THÔNG TIN MỜI KHÁCH</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">CHI TIẾT LỊCH MỜI KHÁCH</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Name -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+
+                        <ejs-datetimepicker id="time_regist" name="time_regist" formControlName="time_regist"
+                          placeholder=".../.../..." aria-placeholder=".../.../..." [min]='minDate'
+                          [(ngModel)]="model.time_regist" format="dd/MM/yyyy HH:mm:ss" *ngIf="flagState != 'view'"></ejs-datetimepicker>
+
+                          <ejs-datetimepicker id="time_regist" name="time_regist" formControlName="time_regist"
+                          placeholder=".../.../..." aria-placeholder=".../.../..." 
+                          [(ngModel)]="model.time_regist" format="dd/MM/yyyy HH:mm:ss" *ngIf="flagState == 'view'"></ejs-datetimepicker>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="time_regist">Thời gian</label>
+                        <span class="input-error"
+                          *ngIf="flagState != 'view' && editForm.get('time_regist').hasError('required') &&!editForm.get('time_regist').untouched">
+                          Trường Thời gian bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="flagState != 'view' && isFutureDate(model.time_regist)">
+                          Trường Thời gian phải lớn hơn thời gian hiện tại!
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                  </div>
+                  <div class="col-sm-4">
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="invited_guest" name="invited_guest" formControlName="invited_guest" [(ngModel)]="model.invited_guest" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="invited_guest">Khách mời</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('invited_guest').hasError('required') &&!editForm.get('invited_guest').untouched">
+                          Trường Khách mời bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('invited_guest').hasError('maxlength') && !editForm.get('invited_guest').untouched">
+                          Tên chức vụ không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="phone_number" name="phone_number" formControlName="phone_number" [(ngModel)]="model.phone_number" maxlength="15" (keypress)="onlyNumberKey($event)"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="phone_number">Số điện thoại</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('phone_number').hasError('maxlength') && !editForm.get('phone_number').untouched">
+                          Tên chức vụ không được vượt quá 15 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <span class="e-float-line"></span>
+                        <ejs-dropdownlist id="status" [dataSource]="lstStatus" [fields]="fields"
+                          [(ngModel)]="model.status" [placeholder]="" [ngModelOptions]="{standalone: true}"[allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstStatus)" [showClearButton]="true" [disabled] = "flagState != 'edit'"
+                          placeholder="Chọn giá trị">
+                        </ejs-dropdownlist>
+                        <label class="e-float-text" for="status">Trạng thái</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="invited_person" [dataSource]="lstPersons" [fields]="fields"
+                          [(ngModel)]="model.invited_person" [placeholder]="" formControlName="invited_person" [allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstPersons)" [showClearButton]="true"
+                          placeholder="Chọn giá trị" (ngModelChange)="changeModel()">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="invited_person">Người mời</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('invited_person').hasError('required') &&!editForm.get('invited_person').untouched">
+                          Trường Người mời bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="department_name" name="department_name" formControlName="department_name"  [(value)]="department_name" disabled />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="department">Phòng ban</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="job_title_name" name="job_title_name" formControlName="job_title_name"  [(value)]="job_title_name" disabled />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="title_id">Chức vụ</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Note -->
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <textarea type="text" id="job_description" name="job_description" formControlName="job_description"
+                          [(ngModel)]="model.job_description" rows="3" maxlength="2000"></textarea>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="job_description">Nội dung làm việc</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <textarea type="text" id="participant_information" name="participant_information" formControlName="participant_information"
+                          [(ngModel)]="model.participant_information" rows="3" maxlength="2000"></textarea>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="participant_information">Thông tin đi cùng</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu thông tin</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

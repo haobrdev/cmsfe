@@ -1,0 +1,106 @@
+add-equipment-modals {
+    // Add css for add-equipment-modals - start
+    .app-modal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      overflow: auto;
+    }
+    
+    .app-modal-body {
+        padding-bottom: 20px;
+        background: #fff;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border: 1px solid #C2BCBC;
+        width: 50%;
+        height: 40%;
+        margin: 0 auto;
+        margin-top: 205px;
+    }
+    
+    .app-modal-background {
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background-color: #000;
+      opacity: 0.75;
+      z-index: 905;
+    }
+
+    .header{
+      color: #fff;
+      border-bottom: 1px solid #C2BCBC;
+      background: no-repeat padding-box #4285F4 !important;
+      padding: 5px 0px;
+      .icon{
+        &:hover {
+          color: #000000;
+          cursor: pointer;
+        }
+      }
+    }
+    
+    .btn-remove{
+      display: block;
+      float: right;
+    }
+
+    .btnConfirmRepass {
+      margin-top: 10px !important;
+      display: flex;
+      justify-content: flex-end !important;
+      margin-top: 20px !important;
+    }
+    // Add css for add-equipment-modals - end
+
+    .back__btn {
+        padding: 1px 35px;
+        background: no-repeat padding-box grey;
+        text-align: left;
+        font: normal normal bold 14px/30px Roboto !important;
+        letter-spacing: 0;
+        color: #fff;
+        border: none;
+        border-radius: 3px !important;
+        opacity: 1;
+        margin-right: 10px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .save__btn {
+        padding: 1px 35px;
+        background: no-repeat padding-box #4285F4;
+        text-align: left;
+        font: normal normal bold 14px/30px Roboto !important;
+        letter-spacing: 0;
+        color: #fff;
+        border: none;
+        border-radius: 3px !important;
+        opacity: 1;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .e-checkbox-wrapper .e-frame, .e-css.e-checkbox-wrapper .e-frame{
+      width: 25px !important;
+      height: 25px !important;
+    }
+
+    .e-checkbox-wrapper .e-check, .e-css.e-checkbox-wrapper .e-check{
+      font-size: 15px !important;
+    }
+
+    .e-checkbox-wrapper .e-frame, .e-css.e-checkbox-wrapper .e-frame{
+      line-height: 25px !important;
+    }
+}

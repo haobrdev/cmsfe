@@ -1,0 +1,39 @@
+<div class="app-sidebar-menu">
+  <ul class="app-sidebar">
+    <li class="app-sidebar-item" *ngFor="let item of navigation" [class.bg-active]="_router.url.indexOf(item.url) === 0" 
+      (click)="routerLink(item)">
+      <a class="app-sidebar-main-item" [class.active]="_router.url.indexOf(item.url) === 0"
+        *ngIf="item.type === 'items'">
+        <span class="sidebar-name">
+          {{ item.translate | translate }}
+        </span>
+      </a>
+      <a class="app-sidebar-main-item menu-child" [class.active]="_router.url.indexOf(item.url) === 0"
+        *ngIf="item.type === 'group'" data-toggle="collapse" [attr.data-target]="'#' + item.id" [attr.aria-expanded]="
+          _router.url.indexOf(item.url) === 0 ? 'true' : 'false'
+        ">
+        <span class="sidebar-name">
+          {{ item.translate | translate }}
+        </span>
+        <ul class="sub-menu" *ngIf="item.type==='group'">
+          <li class="sub-item" *ngFor="let subItem of item.children" (mouseenter)="toggleSubMenu(subItem.id, true)" (mouseleave)="toggleSubMenu(subItem.id, false)">
+            <a class="app-sidebar-items" [class.active]="_router.url.indexOf(subItem.url) === 0"
+              *ngIf="!subItem.children" (click)="routerLink(subItem)">
+              <span class="sub-item-name">{{subItem.translate | translate}}</span>
+            </a>
+            <span class="sub-item-name" *ngIf="subItem.type === 'items'">{{subItem.translate | translate}}</span>
+            <a class="app-sidebar-items menu-child" [class.active]="_router.url.indexOf(subItem.url) === 0"
+              *ngIf="subItem.type === 'items'" data-toggle="collapse" [attr.data-target]="'#' + subItem.id" [attr.aria-expanded]="
+                _router.url.indexOf(subItem.url) === 0 ? 'true' : 'false'" style="margin-top: -10px;">
+              <ul class="sub-menu sub-menu-item" *ngIf="subItem.children && isSubMenuVisible(subItem.id)">
+                <li class="sub-item" *ngFor="let i of subItem.children" [routerLink]="[i.url]">
+                  <span class="sub-item-name">{{i.translate | translate}}</span>
+                </li>
+              </ul>
+            </a>
+          </li>
+        </ul>
+      </a>
+    </li>
+  </ul>
+</div>

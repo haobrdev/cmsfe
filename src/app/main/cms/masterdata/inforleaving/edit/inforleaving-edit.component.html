@@ -1,0 +1,284 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI THÔNG TIN NGƯỜI VÀO RA</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">CẬP NHẬT THÔNG TIN NGƯỜI VÀO RA</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">CHI TIẾT THÔNG TIN NGƯỜI VÀO RA</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-4">
+                <!-- Portrait Photo -->
+                <div class="col-sm-12">
+                  <div class="image_portrait_photo">
+                    <div class="portrait_photo_top">
+                      <div class="upload-file-area green" style="margin-top: 0px; margin-bottom: 0px; height: 460px;"
+                        onclick="javascript:document.getElementById('portrait_photo').click();" *ngIf="!portrait_photo">
+                        <img src="/assets/images/addPicture_Vehicle.png" style="width: 100%;height: 100%; margin-top: 0px;" />
+                      </div>
+                      <img *ngIf="portrait_photo" [src]="portrait_photo" style="width: 100%; height: 100%;"/>
+                      <span *ngIf="
+                          portrait_photo &&
+                          portrait_photo !== '/assets/images/addPicture_Vehicle.png' &&
+                          flagState != 'view'" 
+                          style="
+                            position: absolute;
+                            top: 0px;
+                            cursor: pointer;">
+                        <i class="fa fa-remove" (click)="removeImage('portrait_photo')"></i></span>
+                    </div>
+                    <div class="custom-file mt-15" style="display: none">
+                      <input style="font-size: 13px" #fileportrait type="file" id="portrait_photo" accept=".png, .jpg, .jpe"
+                        [disabled]="flagState === 'view'" (change)="uploadPortraitPhoto(fileportrait.files)" style="display: none" />
+                    </div>
+                  </div>
+                  <div style="width: 70%; margin: 0 auto;">
+                    <div class="row" *ngIf="flagState != 'view' ">
+                      <div class="col-sm-6" style="text-align: left; padding-left: 0px !important;">
+                        <p class="full-width m-t-15">Ảnh chân dung</p>
+                      </div>
+                      <div class="col-sm-6" style="margin-top: 10px; padding: 0px;">
+                        <div onclick="javascript:document.getElementById('portrait_photo').click();" style="float: right;">
+                          <button class="upload_btn btn-action" *ngIf="flagState != 'view'">
+                            Tải ảnh lên</button>
+                            <span><i class="fa fa-upload upload_icon"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <!-- Row 1-->
+                <div class="row">
+                  <!-- Full_name -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="full_name" name="full_name" formControlName="full_name" [(ngModel)]="model.full_name" maxlength="255"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="full_name">Họ tên</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('full_name').hasError('required') &&!editForm.get('full_name').untouched">
+                          Trường họ tên bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('full_name').hasError('maxlength') && !editForm.get('full_name').untouched">
+                          Họ tên không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Employee_type -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="employee_type" [dataSource]="lstEmployeeType"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.employee_type"
+                          formControlName="employee_type" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="employee_type">Loại</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('employee_type').hasError('required') &&!editForm.get('employee_type').untouched">
+                          Trường loại buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Job_title -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="job_title" [dataSource]="lstJobTitle"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.job_title"
+                          formControlName="job_title" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="job_title">Chức danh</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Department -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="department" [dataSource]="lstDepartment"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.department"
+                          formControlName="department" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="department">Phòng ban</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Phone_number -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="phone_number" name="phone_number" formControlName="phone_number" [(ngModel)]="model.phone_number" maxlength="15"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="phone_number">Điện thoại</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Email -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="email" name="email" formControlName="email" [(ngModel)]="model.email" maxlength="255"/>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="email">Email</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('email').hasError('email') && !editForm.get('email').untouched">
+                          Trường Email không hợp lệ
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row Radio Button-->
+                <div class="row">
+                  <div class="col-sm-2" *ngFor='let documenttype of documenttypes'>
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-radiobutton [label]='documenttype' [value]="documenttype" name="document_type" formControlName="document_type" [(ngModel)]="model.document_type"></ejs-radiobutton>
+                        <label class="e-float-text" for="documenttype" *ngIf="documenttype == 'CCCD'">Loại giấy tờ</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row 3-->
+                <div class="row">
+                  <!-- Document_number -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="document_number" name="document_number" formControlName="document_number" [(ngModel)]="model.document_number" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="document_number">Số giấy tờ</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Gender -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="gender" [dataSource]="lstGenders"
+                          [fields]="fields" [showClearButton]="true" [(ngModel)]="model.gender"
+                          formControlName="gender" [allowFiltering]="true">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="gender">Giới tính</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Address -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="address" name="address" formControlName="address" [(ngModel)]="model.address" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="address">Địa chỉ</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Row 4-->
+                <div class="row">
+                  <!-- Front Photo -->
+                  <div class="col-sm-6 m-t-15">
+                    <div class="row" *ngIf="flagState != 'view' ">
+                      <div class="col-sm-6" style="text-align: left; padding-left: 0px !important;">
+                        <p class="full-width m-t-15">Ảnh mặt trước</p>
+                      </div>
+                      <div class="col-sm-6" style="margin-top: 10px; padding: 0px;">
+                        <div onclick="javascript:document.getElementById('front_photo').click();" style="float: right;">
+                          <button class="upload_btn btn-action" *ngIf="flagState != 'view'">
+                            Tải ảnh lên</button>
+                            <span><i class="fa fa-upload upload_icon"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="image_photo_footer">
+                      <div class="image_photo_top">
+                        <div class="upload-file-area green" style="margin-top: 0px; margin-bottom: 0px; height: 300px;"
+                          onclick="javascript:document.getElementById('front_photo').click();" *ngIf="!front_photo">
+                          <img src="/assets/images/addPicture_Vehicle.png" style="width: 100%;height: 100%; margin-top: 0px;" />
+                        </div>
+                        <img *ngIf="front_photo" [src]="front_photo" style="width: 100%;height: 300px;" />
+                        <span *ngIf="
+                            front_photo &&
+                            front_photo !== '/assets/images/addPicture_Vehicle.png' &&
+                            flagState != 'view'" 
+                            style="
+                              position: absolute;
+                              top: 0px;
+                              cursor: pointer;">
+                          <i class="fa fa-remove" (click)="removeImage('front_photo')"></i></span>
+                      </div>
+                      <div class="custom-file mt-15" style="display: none">
+                        <input style="font-size: 13px" #filefront type="file" id="front_photo" accept=".png, .jpg, .jpe"
+                          [disabled]="flagState === 'view'" (change)="uploadFrontPhoto(filefront.files)" style="display: none" />
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Back Photo -->
+                  <div class="col-sm-6 m-t-15">
+                    <div class="row" *ngIf="flagState != 'view' ">
+                      <div class="col-sm-6" style="text-align: left; padding-left: 0px !important;">
+                        <p class="full-width m-t-15">Ảnh mặt sau</p>
+                      </div>
+                      <div class="col-sm-6" style="margin-top: 10px; padding: 0px;">
+                        <div onclick="javascript:document.getElementById('back_photo').click();" style="float: right;">
+                          <button class="upload_btn btn-action" *ngIf="flagState != 'view'">
+                            Tải ảnh lên</button>
+                            <span><i class="fa fa-upload upload_icon"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="image_photo_footer">
+                      <div class="image_photo_top">
+                        <div class="upload-file-area green" style="margin-top: 0px; margin-bottom: 0px; height: 300px;"
+                          onclick="javascript:document.getElementById('back_photo').click();" *ngIf="!back_photo">
+                          <img src="/assets/images/addPicture_Vehicle.png" style="width: 100%;height: 100%; margin-top: 0px;" />
+                        </div>
+                        <img *ngIf="back_photo" [src]="back_photo" style="width: 100%;height: 300px;" />
+                        <span *ngIf="
+                            back_photo &&
+                            back_photo !== '/assets/images/addPicture_Vehicle.png' &&
+                            flagState != 'view'" 
+                            style="
+                              position: absolute;
+                              top: 0px;
+                              cursor: pointer;">
+                          <i class="fa fa-remove" (click)="removeImage('back_photo')"></i></span>
+                      </div>
+                      <div class="custom-file mt-15" style="display: none">
+                        <input style="font-size: 13px" #fileback type="file" id="back_photo" accept=".png, .jpg, .jpe"
+                          [disabled]="flagState === 'view'" (change)="uploadBackPhoto(fileback.files)" style="display: none" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu thông tin</button>
+              </div>
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState == 'view'">
+                <button class="back__btn " (click)="back()">Quay lại</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

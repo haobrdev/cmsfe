@@ -1,0 +1,26 @@
+app-layout {
+    .toolbar {
+        position: fixed;
+        width: 100%;
+        z-index: 3;
+        border-bottom: 1px solid #EAEBEC;
+    }
+
+    @media only screen and (min-width: 800px) {
+        .toolbar {
+            height: 65px;
+        }
+    }
+
+    @media only screen and (min-width: 1360px) {
+        .toolbar {
+            height: 110px;
+        }
+
+        // hoan sua
+        .toolbar {
+          height: auto !important;
+      }
+    }
+
+}

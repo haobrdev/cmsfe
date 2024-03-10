@@ -1,0 +1,88 @@
+<div class="app-main-content">
+    <div class="app-container">
+      <div class="app-content">
+        <div class="card card-content">
+          <div class="card-main-header">
+            <img src="/assets/images/plus.png" />
+            <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI TRANG THIẾT BỊ</span>
+            <span class="card-main-title" *ngIf="flagState === 'edit'">CẬP NHẬT TRANG THIẾT BỊ</span>
+            <span class="card-main-title" *ngIf="flagState === 'view'">CHI TIẾT TRANG THIẾT BỊ</span>
+          </div>
+          <div class="card-main-content">
+            <form name="editForm" [formGroup]="editForm" novalidate>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="row">
+                    <!-- Tên thiết bị -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="e-float-input">
+                          <input type="text" id="equipment_name" name="equipment_name" formControlName="equipment_name" [(ngModel)]="model.equipment_name"  maxlength="255"  autofocus />
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text required" for="license_no">Tên thiết bị</label>
+                          <span class="input-error" *ngIf="editForm.get('equipment_name').hasError('required') && !editForm.get('equipment_name').untouched ">
+                            Trường Tên thiết bị bắt buộc nhập
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Loại thiết bị -->
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <div class="e-float-input">
+                              <ejs-dropdownlist id="equipment_type" [dataSource]="lstEquipmentTypes" [fields]="fields"
+                                [(ngModel)]="model.equipment_type" [placeholder]="" formControlName="equipment_type"
+                                [allowFiltering]="true" 
+                                [showClearButton]="true" placeholder="Chọn giá trị" >
+                              </ejs-dropdownlist>
+                              <span class="e-float-line"></span>
+                              <label class="e-float-text required" for="equipment_type">Loại thiết bị</label>
+                              <span class="input-error" *ngIf="
+                  editForm.get('equipment_type').hasError('required') &&
+                  !editForm.get('equipment_type').untouched
+                ">
+                                Trường Loại thiết bị bắt buộc chọn
+                              </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Số seri -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <div class="e-float-input">
+                          <input type="text" id="seri" name="seri" formControlName="seri" [(ngModel)]="model.seri"  maxlength="255"   />
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text" for="seri">Số seri</label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <!-- Đặc điểm-->
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                          <div class="e-float-input">
+                            <textarea type="text" id="description" name="description" formControlName="description" maxlength="2000"
+                              [(ngModel)]="model.description" rows="3"></textarea>
+                            <span class="e-float-line"></span>
+                            <label class="e-float-text" for="description">Đặc điểm</label>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <!-- *ngIf="flagState != 'view'" -->
+                <div class="col-sm-12 text-right mt-3" >
+                  <button class="back__btn " (click)="back()">Quay lại</button>
+                  <!-- *ngIf="flagState === 'new'" -->
+                  <button class="save__btn btn-action" (click)="saveData()"  *ngIf="flagState != 'view'">Lưu thông tin</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

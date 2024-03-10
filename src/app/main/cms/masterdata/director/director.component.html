@@ -1,0 +1,94 @@
+<div class="app-main-content">
+    <div class="app-container">
+        <div class="app-toolbar">
+            <div class="card card-content">
+                <div class="card-main-header">
+                    <img src="/assets/images/list-icon.png" />
+                    <span class="card-main-title font-weight-bold">The Director Management</span>
+                </div>
+            </div>
+
+            <div class="card card-content">
+                <!-- <h5 class="title">Tìm kiếm</h5> -->
+                <div class="row">
+                    <!-- <div class="col-12">
+                        <h5 class="font-weight-bold">The Search Filter</h5>
+                    </div> -->
+                    <div class="col-md-8 row">
+                        <div class="col-md-6">
+                            <!-- Director Name  -->
+                            <div class="form-group mgl-1">
+                                <div class="e-float-input">
+                                    <input class="directorName" type="text" id="directorName" name="directorName"
+                                        [placeholder]="'Enter Director Name'" [(ngModel)]="search.directorName"
+                                        [ngModelOptions]="{ standalone: true }" />
+                                    <label class="e-float-text font-weight-bold" for="directorName">Director
+                                        Name</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <!-- Nation  -->
+                            <div class="form-group mgl-1">
+                                <div class="e-float-input">
+                                    <ejs-dropdownlist id="nation" [dataSource]="listNation" [fields]="fields"
+                                        [popupWidth]="200" [(ngModel)]="search.nationId" [placeholder]=""
+                                        [ngModelOptions]="{ standalone: true }" [allowFiltering]="true"
+                                        (filtering)="onFiltering($event, lstLicenseTypes)" [showClearButton]="true"
+                                        placeholder="Choose Nation" (change)="changeNation()"
+                                        (ngModelChange)="changeNation()">
+                                    </ejs-dropdownlist>
+                                    <label class="e-float-text font-weight-bold" for="text">Nation</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-md-4 d-flex justify-content-end"> -->
+
+                    <div class="col-md-4 d-flex">
+                        <div class="form-group mgl-1">
+                            <div class="e-float-input">
+                                <button class="btn btn btn-danger" (click)="getListData()">Search</button>
+                            </div>
+                            <label class="e-float-text font-weight-bold" for="text"></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- table -->
+        <div class="card-main-content row">
+            <div class="col-12">
+                <h5 class="font-weight-bold">The List of Director</h5>
+            </div>
+            <div class="col-12">
+                <div class="list-grid">
+                    <ejs-grid #datagrid id="datagrid" [dataSource]="data | async" [allowPaging]="true"
+                        [pageSettings]="configs.pageSettings" [enableHover]="true"
+                        (dataStateChange)="dataStateChange($event)" [allowTextWrap]="true"
+                        [textWrapSettings]="configs.wrapSettings">
+    
+                        <e-columns>
+                            <e-column field="id" [visible]="false" headerText="ID" [isPrimaryKey]="true"></e-column>
+                            <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" width=120>
+                                <ng-template #template let-data>
+                                    <span>{{ formatStt(data.index) }}</span>
+                                </ng-template>
+                            </e-column>
+                            <e-column field="fullName" textAlign="Left" headerTextAlign="Center" headerText="Full Name"
+                                width=300>
+                            </e-column>
+                            <e-column field="dob" textAlign="Left" headerTextAlign="Center" headerText="Birthday" width=300>
+                            </e-column>
+                            <e-column field="nation" textAlign="Left" headerTextAlign="Center" headerText="Nation"
+                                width=300>
+                            </e-column>
+                        </e-columns>
+                    </ejs-grid>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

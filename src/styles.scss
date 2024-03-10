@@ -1,0 +1,17 @@
+// Import app.theme.scss
+@import "app/app.theme";
+@import "assets/css/style-bootstrap.css";
+@import "assets/css/style.css";
+@import "assets/css/style-material.css";
+@import "assets/css/style-default.css";
+// @import "assets/css/syncfusion/bootstrap4.scss";
+
+@font-face {
+  font-family: login-font;
+  src: url(assets/fonts/Poppins-Regular.ttf) format("opentype");
+}
+
+@font-face {
+  font-family: cms-font;
+  src: url(assets/fonts/Helvetica.ttf) format("opentype");
+}

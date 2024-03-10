@@ -1,0 +1,28 @@
+cms-togglevisibilityinfoinout{
+  .tileheader{
+      border-bottom: 1px solid #c2bcbc;
+      margin-bottom: 5px !important;
+  }  
+  .e-float-input{
+      margin-top: 20px !important;
+  }
+
+  .e-checkbox-wrapper .e-frame, .e-css.e-checkbox-wrapper .e-frame{
+    width: 25px;
+    height: 25px;
+  }
+
+  .e-checkbox-wrapper .e-checkbox:focus+.e-frame.e-check, .e-css.e-checkbox-wrapper .e-checkbox:focus+.e-frame.e-check {
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .e-checkbox-wrapper .e-frame.e-check, .e-css.e-checkbox-wrapper .e-frame.e-check {
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .app-main-content .app-container .card-content .card-main-content input{
+    display: none;
+  }
+}

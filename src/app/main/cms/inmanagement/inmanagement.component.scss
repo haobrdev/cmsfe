@@ -1,0 +1,249 @@
+app-cms-inmanagement{
+  /* Thiết lập vị trí tuyệt đối cho danh sách gợi ý */
+  ul {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    width: 100%;
+    background-color: #e7e7e7;
+    z-index: 9999;
+  }
+
+  /* Hiển thị màu nền khi hover */
+  ul li{
+    height: 32px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-left: 10px;
+    padding-top: 5px;
+  }
+  
+  /* Hiển thị màu nền khi hover */
+  ul li:hover {
+    background-color: #f0f0f0; /* Màu nền khi hover */
+    cursor: pointer; /* Biểu tượng con trỏ khi hover */
+  }
+
+  .checkpoint_name, .port_name{
+    width: 250px;
+  }
+
+  .image_multi_camera{
+    margin: 20px auto 0;
+  }
+
+  .image_chirld_camera{
+    position: relative;
+    // padding: 20px;
+    background-color: #CCCCCC;
+    height: 260px;
+  }  
+
+  .capture_btn {
+    background: none;
+    border: none;
+    padding-bottom: 0.5rem;
+    // padding: 1px 18px;
+    // text-align: left;
+    // font: normal normal bold 16px/30px Roboto !important;
+    // letter-spacing: 0;
+    // color: #fff;
+    // border-radius: 3px !important;
+    // opacity: 1;
+    // height: 36px;
+  }
+  .person_capture_btn {
+    background: none;
+    border: none;
+    padding: 5px 6px 6px 6px !important;
+  }
+
+  .correct_information{
+    background: no-repeat padding-box #82f98e;
+    font: normal normal bold 16px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #000000;
+    border: none;
+    opacity: 1;
+    height: 45px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .incorrect{
+    background: no-repeat padding-box #ec808d;
+    font: normal normal bold 16px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #000000;
+    border: none;
+    opacity: 1;
+    height: 45px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .image_identification{
+    // margin: 10px auto 0;
+  }
+
+  .identification_top{
+    position: relative;
+    // padding: 20px;
+    background-color: #CCCCCC;
+    height: 240px;
+  }
+
+  .lable-register{
+    margin-top: 0px !important;
+  }
+
+  .image_person_entering{
+    // margin: 20px auto 0;
+  }
+
+  .person_entering_photo_top{
+    position: relative;
+    // padding: 20px;
+    background-color: #CCCCCC;
+    height: 240px;
+  }  
+
+  .image_person_out{
+    margin: 20px auto 0;
+    text-align: right;
+  }
+
+  .person_out_photo_top{
+    position: relative;
+    // padding: 20px;
+    background-color: #CCCCCC;
+    height: 385px;
+  }  
+
+  .save__btn {
+    padding: 1px 35px;
+    background: no-repeat padding-box #4285f4;
+    text-align: left;
+    font: normal normal bold 14px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #fff;
+    border: none;
+    border-radius: 3px !important;
+    opacity: 1;
+  }
+
+  .back__btn {
+    padding: 1px 35px;
+    background: no-repeat padding-box grey;
+    text-align: left;
+    font: normal normal bold 14px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #fff;
+    border: none;
+    border-radius: 3px !important;
+    opacity: 1;
+    margin-right: 8px;
+  }
+
+  .accompanying_vehicle {
+    padding: 1px 35px;
+    background: no-repeat padding-box #169bd5;
+    text-align: left;
+    font: normal normal bold 14px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #fff;
+    border: none;
+    border-radius: 3px !important;
+    opacity: 1;
+    margin-right: 8px;
+  }
+  
+  .accompanying_people {
+    padding: 1px 35px;
+    background: no-repeat padding-box #169bd5;
+    text-align: left;
+    font: normal normal bold 14px/30px Roboto !important;
+    letter-spacing: 0;
+    color: #fff;
+    border: none;
+    border-radius: 3px !important;
+    opacity: 1;
+    margin-right: 8px;
+  }
+
+  .line-content{
+    border-bottom: 1px solid #c2bcbc;
+    font-size: 21px;
+    font-weight: 500;
+  }
+
+  /* Style cho icon search */
+  .search-container {
+    position: relative;
+  }
+
+  /* Định dạng icon search */
+  .search-container i {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #888;
+    cursor: pointer;
+  }
+
+  .collapsed-content {
+    transition: height 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  .hover_image{
+    font-style: italic;
+    color: #66b3ff;
+  }
+
+  .hover_image:hover {
+    cursor: pointer;
+  }
+
+  /* CSS để loại bỏ border khi button được focus */
+  button:focus {
+    outline: none; /* Loại bỏ border focus mặc định */
+  }
+
+  .fp-Video {
+    // border: 1px double black;
+    width: 100%;
+    height: 100%;
+  }
+
+  .display {
+      width: 100%;
+      height: 100%;
+      display: inline-block;
+  }
+  
+  .display > img,
+  object {
+      width: 100%;
+      height: 100%;
+  }
+
+  .col-chirld{
+    padding: 0px !important;
+  }
+
+  .col-left{
+    padding-right: 10px !important;
+  }
+
+  .col-right{
+    padding-left: 10px !important;
+  }
+
+  .right-border{
+    border-right: 1px solid #c2bcbc;
+  }
+  .padding-4 
+  {
+    padding: 4px 4px 4px 4px !important;;
+  } 
+}

@@ -1,0 +1,63 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI CHỨC VỤ</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">SỬA CHỨC VỤ</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">XEM CHỨC VỤ</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Tên -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="name" name="name" formControlName="name" [(ngModel)]="model.name" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="name">Tên chức vụ</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('name').hasError('required') &&!editForm.get('name').untouched">
+                          Trường Tên chức vụ bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('name').hasError('maxlength') && !editForm.get('name').untouched">
+                          Tên chức vụ không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-6 dp-fl-cb">
+                    <ejs-checkbox label="Kích hoạt" [checked]="model.flag_status" formControlName="status" [(ngModel)]="model.flag_status" (change)="changeAcctive()">
+                    </ejs-checkbox>
+                  </div>
+                  <!-- Ghi chú -->
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <textarea type="text" id="description" name="description" formControlName="description"
+                          [(ngModel)]="model.description" rows="3"></textarea>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="description">Mô tả</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

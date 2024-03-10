@@ -1,0 +1,58 @@
+<div id="login" fxLayout="column">
+    <div id="login-form-wrapper" fxLayout="column" fxLayoutAlign="center center">
+        <div id="login-form">
+          <h4 class="text-center title">ĐĂNG NHẬP HỆ THỐNG</h4>
+            <div class="frmlgin">
+              <div class="login-logo text-center">
+                <img src="/assets/images/logo.png">
+            </div>
+              <form name="loginForm" [formGroup]="loginForm" novalidate>
+                  <div class="form-group" style="margin-bottom: 10px !important;">
+                      <div class="e-float-input">
+                          <input type="text" id="username" name="username" formControlName="username" class="form-control"
+                              [(ngModel)]="model.username" (keypress)="enterSignIn($event)" maxlength="20">
+                          <span class="input-error" style="position: absolute;"
+                              *ngIf="loginForm.get('username').hasError('required') && !loginForm.get('username').untouched">
+                              Tên đăng nhập không được bỏ trống!
+                          </span>
+                          <span class="input-error" style="position: absolute;"
+                              *ngIf="loginForm.get('username').hasError('maxlength') && !loginForm.get('username').untouched">
+                              Tên đăng nhập không được vượt quá 20 ký tự
+                          </span>
+                          <label class="e-float-text required" for="username">Tên đăng nhập</label>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <div class="e-float-input">
+                          <input id="password" name="password" class="form-control"
+                              [type]="showPassword ? 'text' : 'password'" formControlName="password"
+                              [(ngModel)]="model.password" (keypress)="enterSignIn($event)" maxlength="20">
+                          <span class="show-pass" (click)="showPassword = !showPassword"><i class="fa"
+                                  [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"></i></span>
+                          <span class="input-error" style="position: absolute;"
+                              *ngIf="loginForm.get('password').hasError('required') && !loginForm.get('password').untouched">
+                              Mật khẩu không được bỏ trống!
+                          </span>
+                          <span class="input-error" style="position: absolute;"
+                              *ngIf="loginForm.get('password').hasError('maxlength') && !loginForm.get('password').untouched">
+                              Mật khẩu không được vượt quá 20 ký tự
+                          </span>
+                          <label class="e-float-text required" for="password">Mật khẩu</label>
+                      </div>
+                  </div>
+                  <div class="col-md-12 text-right">
+                      <a class="forgot" [routerLink]="'/auth/forgot-password'">Quên mật khẩu?</a>
+                  </div>
+                  <div class="form-group text-center form-button">
+                      <button type="button" class="button signIn" (click)="signIn()" style="margin-right: 30px">
+                          Đăng nhập
+                      </button>
+                      <button type="button" class="button signIn-sso" (click)="signIn()">
+                          Đăng nhập SSO
+                      </button>
+                  </div>
+              </form>
+            </div>
+        </div>
+    </div>
+</div>

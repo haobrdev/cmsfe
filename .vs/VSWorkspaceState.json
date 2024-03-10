@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\main",
+    "\\src\\app\\main\\cms",
+    "\\src\\app\\main\\cms\\masterdata\\director",
+    "\\src\\app\\_models",
+    "\\src\\app\\_models\\masterdata",
+    "\\src\\app\\_models\\netmovies"
+  ],
+  "SelectedNode": "\\src\\app\\_models\\netmovies\\Director.ts",
+  "PreviewInSolutionExplorer": false
+}

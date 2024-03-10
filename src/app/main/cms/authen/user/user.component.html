@@ -1,0 +1,353 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-toolbar">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/list-icon.png" />
+          <span class="card-main-title">DANH SÁCH NGƯỜI DÙNG HỆ THỐNG</span>
+        </div>
+        <div class="row full-width">
+          <!-- <div class="col-sm-3">
+            <h5 class="title">Đơn vị phòng ban</h5>
+            <div class="col-sm-12 treeview">
+              <div id='treeparent'>
+                <div id='treeparent'>
+                  <div id='treeparent'>
+                    <ejs-treeview #tree id='treeelement' [fields]='fieldOrg' (nodeSelected)='nodeSelected($event)'>
+                      <ng-template #nodeTemplate let-data>
+                        <div class="row">
+                          <span style="color: #ffda6a;margin-right: 5px;" *ngIf="data && data.hasChild"><i
+                              class="fa fa-folder-open"></i></span>
+                          <span style="color: #ffda6a;margin-right: 5px;" *ngIf="data && !data.hasChild"><i
+                              class="fa fa-folder"></i></span>
+                          <span>{{data.name}}</span>
+                        </div>
+                      </ng-template>
+                    </ejs-treeview>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> -->
+          <div class="col-sm-9" style="flex: 100%; max-width: 100%;">
+            <div class="row full-width">
+              <h5 class="title">Tìm kiếm</h5>
+              <div class="card card-content-design">
+                <div class="main-toolbar">
+                  <div class="row">
+                    <div class="col-sm-11 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+                      <div class="form-group mgl-1">
+                        <div class="e-float-input">
+                          <input class="searchText" type="text" id="username" name="username"
+                            [placeholder]="'Nhập tài khoản'" [(ngModel)]="search.username"
+                            [ngModelOptions]="{ standalone: true }" (keypress)="searchListEnter($event)" />
+                          <label class="e-float-text" for="username">Tài khoản</label>
+                        </div>
+                      </div>
+                      <div class="form-group mgl-1">
+                        <div class="e-float-input">
+                          <input class="searchText" type="text" id="full_name" name="full_name"
+                            [placeholder]="'Họ và tên'" [(ngModel)]="search.full_name"
+                            [ngModelOptions]="{ standalone: true }" (keypress)="searchListEnter($event)" />
+                          <label class="e-float-text" for="full_name">Họ và tên</label>
+                        </div>
+                      </div>
+
+                      <!-- Button Tìm kiếm -->
+                    </div>
+                    <div class="col-sm-1 p-n">
+                      <div class="form-group">
+                        <div class="e-float-input m-t-0 bg">
+                          <button class="btn btn-search" (click)="getListData()">
+                            Tìm kiếm
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row full-width">
+              <div class="col-sm-12 main-toolbar">
+                <button id="add" class="btn-action {{ itemButton.iconColorClass }}" (click)="clickToolbar(itemButton)"
+                  *ngFor="let itemButton of toolbar" [disabled]="itemButton.isDisable === true">
+                  <span><i class="fa {{ itemButton.prefixIcon }}"></i></span>
+                  <span class="text-center">{{ itemButton.text }}</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-main-content">
+              <div class="list-grid">
+                <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+                  [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+                  [height]="configs.height()" [allowSorting]="false" allowResizing="true" [locale]="configs.currentLang"
+                  [allowSelection]="true" [showColumnChooser]="false" [selectionSettings]="configs.selectionSettings"
+                  [allowFiltering]="false" (dataStateChange)="dataStateChange($event)"
+                  [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+                  (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)"
+                  [allowTextWrap]="true" [textWrapSettings]="configs.wrapSettings">
+                  <e-columns>
+                    <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                      [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                    <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                      width="70">
+                      <ng-template #template let-data>
+                        <span>{{ formatStt(data.index) }}</span>
+                      </ng-template>
+                    </e-column>
+                    <e-column field="org_name" textAlign="Left" headerTextAlign="Center" headerText="Đơn vị/Phòng ban"
+                      width="140">
+                    </e-column>
+                    <e-column field="username" textAlign="Left" headerTextAlign="Center" headerText="Tài khoản"
+                      width="110">
+                    </e-column>
+                    <e-column field="full_name" textAlign="Left" headerTextAlign="Center" headerText="Họ và tên"
+                      width="140">
+                    </e-column>
+                    <e-column field="gender_name" textAlign="Center" headerTextAlign="Center" headerText="Giới tính"
+                      width="80">
+                    </e-column>
+                    <e-column field="title_name" textAlign="Left" headerTextAlign="Center" headerText="Chức danh"
+                      width="110">
+                    </e-column>
+                    <e-column field="phone" textAlign="Left" clipMode="EllipsisWithTooltip" headerTextAlign="Center"
+                      headerText="Số điện thoại" width="110">
+                    </e-column>
+                    <e-column field="email" textAlign="Center" clipMode="EllipsisWithTooltip" headerTextAlign="Center"
+                      headerText="Email" width="140">
+                    </e-column>
+                    <e-column field="status" textAlign="Center" clipMode="EllipsisWithTooltip" headerTextAlign="Center"
+                      headerText="Kích hoạt" width="80">
+                      <ng-template #template let-data>
+                        <ejs-checkbox label="" [checked]="data.status == true" [disabled]="true">
+                        </ejs-checkbox>
+                      </ng-template>
+                    </e-column>
+                    <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Thao tác"
+                      headerTextAlign="Center" width="120">
+                      <ng-template #template let-data>
+                        <div class="row">
+                          <div class="col-sm-12 custom-tools">
+                             <!-- hoàn sửa start -->
+                            <ejs-tooltip content="Khóa" target="#lock" *ngIf="data.status == 1 && checkToolbar('LOCK')">
+                              <span id="lock" (click)="clickRecord(data, 'lock')">
+                                <i class="fa fa-lock lock" aria-hidden="true"></i>
+                              </span>
+                            </ejs-tooltip>
+
+                            <ejs-tooltip content="Mở khóa" target="#unlock"
+                              *ngIf="data.status != 1 && checkToolbar('UNLOCK')">
+                              <span id="unlock" (click)="clickRecord(data, 'unlock')">
+                                <i class="fa fa-unlock unlock" aria-hidden="true"></i>
+                              </span>
+                            </ejs-tooltip>
+                            <!-- end -->
+                            <ejs-tooltip content="Cập nhật mật khẩu" target="#changePass"
+                              *ngIf="data.status == 1 && checkToolbar('CHANGEPASS')">
+                              <span id="changePass" (click)="clickRecord(data, 'changePass')">
+                                <i class="fa fa-key changePass" aria-hidden="true"></i>
+                              </span>
+                            </ejs-tooltip>
+                            <ejs-tooltip content="Sửa" target="#edit" *ngIf="data.status == 1 && checkToolbar('EDIT')">
+                              <span id="edit" (click)="clickRecord(data, 'edit')">
+                                <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                              </span>
+                            </ejs-tooltip>
+                            <ejs-tooltip content="Xóa" target="#delete"
+                              *ngIf="data.status == 1 && checkToolbar('DELETE')">
+                              <span id="delete" (click)="clickRecord(data, 'delete')">
+                                <i class="fa fa-trash delete" aria-hidden="true"></i>
+                              </span>
+                            </ejs-tooltip>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </e-column>
+                  </e-columns>
+                </ejs-grid>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- CONFIRM DELETE ONE MODAL-->
+<!-- <app-confirm-modal id="confirm-delete-one-modal">
+  <div class="row full-width app-modal-header">
+    <span style="color: red;margin-right: 6px;"><i class="fa fa-exclamation-triangle"></i>
+    </span>Bạn có chắc chắn muốn xóa Tài khoản <b style="color:red">
+      {{ modelDelete && modelDelete.username ? modelDelete.username : ""}}</b> này không?
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal> -->
+<app-confirm-modal id="confirm-delete-one-modal"  class="modal">
+  <div class="modal-body user-modal-body">
+    <span class="user-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Bạn có chắc chắn muốn xóa Tài khoản <b style="color:red">
+        {{ modelDelete && modelDelete.username ? modelDelete.username : ""}}</b>&nbsp;này không?
+    </span> 
+  </div>
+  <div class="modal-footer user-modal-footer">
+    <button class="btn btn-primary m-r-8 user-btn-default" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default user-btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>
+
+
+
+<!-- <app-confirm-modal *ngIf="checkLock" id="confirm-lock-modal">
+  <div class="row full-width app-modal-header">
+    <i style="color: red;margin-right: 6px;" class="fa fa-exclamation-triangle warning" aria-hidden="true"></i>
+    Bạn có chắc muốn khóa Tài khoản&nbsp; <b style="color:red">"{{accountName}}"</b>này không?
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmLock('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmLock('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal> -->
+
+<app-confirm-modal *ngIf="checkLock" id="confirm-lock-modal"  class="modal">
+  <div class="modal-body user-modal-body">
+    <span class="user-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Bạn có chắc chắn khóa Tài khoản <b style="color:red">
+        {{ accountName}}</b>&nbsp;này không?
+    </span> 
+  </div>
+  <div class="modal-footer user-modal-footer">
+    <button class="btn btn-primary m-r-8 user-btn-default" (click)="confirmLock('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default user-btn-default" (click)="confirmLock('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>
+
+
+
+<!-- <app-confirm-modal *ngIf="checkUnlock" id="confirm-unlock-modal">
+  <div class="row full-width app-modal-header">
+    <i style="color: red;margin-right: 6px;" class="fa fa-exclamation-triangle warning" aria-hidden="true"></i>
+    Bạn có chắc muốn mở khóa Tài khoản&nbsp; <b style="color:red">"{{accountName}}"</b>này không?
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmUnlock('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmUnlock('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal> -->
+
+<app-confirm-modal *ngIf="checkUnlock" id="confirm-unlock-modal"  class="modal">
+  <div class="modal-body user-modal-body">
+    <span class="user-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle"></i>
+    </span>  
+    <span style="font-size: 14px;">&nbsp;Bạn có chắc chắn mở khóa Tài khoản <b style="color:red">
+        {{ accountName}}</b>&nbsp;này không?
+    </span> 
+  </div>
+  <div class="modal-footer user-modal-footer">
+    <button class="btn btn-primary m-r-8 user-btn-default" (click)="confirmUnlock('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default user-btn-default" (click)="confirmUnlock('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>
+<app-confirm-modal *ngIf="checkRepass" id="confirm-change-pass-modal" class="modal">
+  <form name="passwordForm" [formGroup]="passwordForm">
+    <h4 class="modal-user">Cập nhật mật khẩu người dùng hệ thống</h4>
+    <div class="modal-body user-modal-body">
+      <div class="form-check mt-3">
+        <input class="form-check-input" type="checkbox" [(ngModel)]="isChecked" [ngModelOptions]="{standalone: true}" id="flexCheckChecked" (ngModelChange)="onCheckboxChange()">
+        <label class="form-check-label" for="flexCheckChecked">
+          Mật khẩu ngẫu nhiên
+        </label>
+      </div>
+      <div class="row full-width">
+        <div class="col-sm-12" style="padding: 0px;">
+          <div class="form-group">
+            <div class="e-float-input">
+              <input [type]="tooglePassWord ? 'text' : 'password'" id="newPassword" name="newPassword"
+              (blur)="checkPass()" [ngClass]="{ fallpass: confirmFlag === true }" (change)="changeOldPass()" (keydown)="onKeyDown($event)"
+                [(ngModel)]="newPassword"   formControlName="newPassword"  placeholder="Nhập mật khẩu mới..." [disabled]="isChecked" maxlength="255" />
+              <span class="e-float-line"></span>
+              <label class="e-float-text required" for="newPassword">Mật khẩu mới</label>
+              <span class="eye" style="top: 17%;left: 95%;" (click)="tooglePassWord = !tooglePassWord"><i class="fa"
+                [class.fa-eye]="!tooglePassWord" [class.fa-eye-slash]="tooglePassWord"></i></span>
+              <span class="input-error" *ngIf="(passwordForm.get('newPassword').hasError('required') || passwordForm.get('newPassword').hasError('minlength')) && isChange && !passwordForm.get('newPassword').untouched
+                ">
+                Mật khẩu mới phải có độ dài tối thiểu 8 ký tự!
+              </span>
+              <span class="input-error" *ngIf="passwordForm.get('newPassword').hasError('pattern') &&  (!passwordForm.get('newPassword').hasError('minlength')) && isChange && !passwordForm.get('newPassword').untouched">
+                Mật khẩu mới phải có tối thiểu 1 chữ in hoa và số!
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row full-width app-modal-content">
+        <div class="row full-width">
+          <div class="col-sm-12" style="padding: 0px;">
+            <div class="form-group">
+              <div class="e-float-input">
+                <input [type]="tooglePassWord2 ? 'text' : 'password'" id="confirmNewPassword" name="confirmNewPassword"
+                (blur)="checkPass()" [ngClass]="{ fallpass: confirmFlag === true }" (change)="changeOldPass()" (keydown)="onKeyDown($event)"
+                  [(ngModel)]="confirmNewPassword" formControlName="confirmNewPassword"
+                  placeholder="Nhập lại mật khẩu mới..." [disabled]="isChecked" maxlength="255"/>
+                <span class="e-float-line"></span>
+                <label class="e-float-text required" for="confirmNewPassword">Nhập lại mật khẩu mới</label>
+                <span class="eye" style="top: 17%;left: 95%;" (click)="tooglePassWord2 = !tooglePassWord2"><i class="fa"
+                  [class.fa-eye]="!tooglePassWord2" [class.fa-eye-slash]="tooglePassWord2"></i></span>
+                <span class="input-error" *ngIf="(passwordForm.get('confirmNewPassword').hasError('required') || passwordForm.get('confirmNewPassword').hasError('minlength')) && isChange && !passwordForm.get('confirmNewPassword').untouched">
+                  Nhập lại mật khẩu mới phải có độ dài tối thiểu 8 ký tự!
+                </span>                  
+                <span class="input-error" *ngIf="(!confirmFlag)  && passwordForm.get('confirmNewPassword').hasError('pattern') &&  (!passwordForm.get('confirmNewPassword').hasError('minlength')) && isChange && !passwordForm.get('confirmNewPassword').untouched
+                ">
+                Nhập lại mật khẩu mới phải có tối thiểu 1 chữ in hoa và số!
+              </span>       
+              <span class="input-error" *ngIf="confirmFlag">
+                Mật khẩu mới và Nhập lại mật khẩu mới không trùng nhau
+              </span>           
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer user-modal-footer">
+      <button class="btn btn-primary m-r-8 user-btn-default" (click)="confirmChangePass('ok')">
+        Đồng ý
+      </button>
+      <button class="btn btn-default user-btn-default" (click)="confirmChangePass('cancel')">
+        Hủy
+      </button>
+    </div>
+  </form>
+</app-confirm-modal>

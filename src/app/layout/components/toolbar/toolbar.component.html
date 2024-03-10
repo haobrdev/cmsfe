@@ -1,0 +1,123 @@
+<div class="row row-1">
+  <div class="logo-image" (click)="returnDashboard()">
+    <img class="app-logo" src="/assets/images/logo2.png" />
+  </div>
+  <div style="width: calc(100% - 120px)">
+    <app-sidebar></app-sidebar>
+    <div class="user-info">
+      <div class="dropdown" dropdown>
+        <a dropdownToggle class="pull-right text-center btn btn-setting dropdown-toggle" data-toggle="dropdown"
+          aria-haspopup="true" aria- expanded="true"><img class="user-avatar" src="{{avatar}}" />
+          <span class="user-name">{{ username }}</span>
+          <span class="position-name">{{ position }}</span>
+        </a>
+        <ul *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="menu1">
+          <li role="presentation" class="user-item" (click)="showProfile()">
+            <a role="menuitem"><i class="fa fa-user-circle"></i>Xem hồ sơ</a>
+          </li>
+          <li role="presentation" class="user-item" (click)="changePassword()">
+            <a role="menuitem"><i class="fa fa-key"></i>Đổi mật khẩu</a>
+          </li>
+          <li role="presentation" class="user-item" (click)="signOut()">
+            <a role="menuitem"><i class="fa fa-sign-out"></i>Đăng xuất</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<app-confirm-modal *ngIf="isShowModalRePassWord" id="open-change-pasword">
+  <form name="passwordForm" [formGroup]="passwordForm">
+    <div class="row full-width app-modal-header"
+      style="margin-bottom: 0 !important; text-align: center; display: block">
+      Đổi mật khẩu
+    </div>
+    <!-- Mật khẩu cũ -->
+    <div class="row full-width app-modal-content">
+      <div class="row full-width">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <div class="e-float-input">
+              <input [type]="tooglePassWord1 ? 'text' : 'password'" id="password" name="old_password"
+                [ngClass]="{ fallpass: flagOldPassword === true }" (change)="changeOldPass()"
+                [(ngModel)]="model.old_password" formControlName="old_password" placeholder="Nhập mật khẩu cũ..." maxlength="255" />
+              <span class="e-float-line"></span>
+              <label class="e-float-text required" for="old_password">Mật khẩu cũ</label>
+              <!-- <span class="eye1" (click)="togglePassword()"><i class="fa fa-eye-slash"></i></span> -->
+              <span class="eye" (click)="tooglePassWord1 = !tooglePassWord1"><i class="fa"
+                  [class.fa-eye]="!tooglePassWord1" [class.fa-eye-slash]="tooglePassWord1"></i></span>
+              <span class="input-error" *ngIf="passwordForm.get('old_password').hasError('required') && !passwordForm.get('old_password').untouched">
+                Mật khẩu cũ không được để trống
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Mật khẩu mới -->
+    <div class="row full-width app-modal-content">
+      <div class="row full-width">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <div class="e-float-input">
+              <input [type]="tooglePassWord2 ? 'text' : 'password'" id="new_password" name="new_password"
+                (blur)="checkPass()" [ngClass]="{ fallpass: confirmFlag === true }" (change)="changeOldPass()"
+                [(ngModel)]="model.new_password" formControlName="new_password" placeholder="Nhập mật khẩu mới..." maxlength="255"/>
+              <span class="e-float-line"></span>
+              <label class="e-float-text required" for="new_password">Mật khẩu mới</label>
+              <span class="eye" (click)="tooglePassWord2 = !tooglePassWord2"><i class="fa"
+                  [class.fa-eye]="!tooglePassWord2" [class.fa-eye-slash]="tooglePassWord2"></i></span>
+              <span class="input-error" *ngIf="(passwordForm.get('new_password').hasError('required') || passwordForm.get('new_password').hasError('minlength')) && !passwordForm.get('new_password').untouched
+                ">
+                Mật khẩu mới phải có độ dài tối thiểu 8 ký tự!
+              </span>
+              <span class="input-error" *ngIf="passwordForm.get('new_password').hasError('pattern') &&  (!passwordForm.get('new_password').hasError('minlength')) && !passwordForm.get('new_password').untouched">
+                Mật khẩu mới phải có tối thiểu 1 chữ in hoa và số!
+              </span>
+              <span class="input-error" *ngIf="confirmFlag === true">
+                Mật khẩu mới và xác nhận mật khẩu không trùng nhau
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Xác nhận mật khẩu -->
+    <div class="row full-width app-modal-content">
+      <div class="row full-width">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <div class="e-float-input">
+              <input [type]="tooglePassWord3 ? 'text' : 'password'" id="confirmPassword" name="old-confirmPassword"
+                [ngClass]="{ fallpass: confirmFlag === true }" (change)="changeOldPass()"
+                [(ngModel)]="model.confirmPassword" formControlName="confirmPassword"
+                placeholder="Nhập mật khẩu mới..." maxlength="255"/>
+              <span class="e-float-line"></span>
+              <label class="e-float-text required" for="confirmPassword">Nhập lại mật khẩu mới</label>
+              <span class="eye" (click)="tooglePassWord3 = !tooglePassWord3"><i class="fa"
+                  [class.fa-eye]="!tooglePassWord3" [class.fa-eye-slash]="tooglePassWord3"></i></span>
+              <span class="input-error" *ngIf="(passwordForm.get('confirmPassword').hasError('required') || passwordForm.get('confirmPassword').hasError('minlength')) && !passwordForm.get('confirmPassword').untouched">
+                Nhập lại mật khẩu phải có độ dài tối thiểu 8 ký tự!
+              </span>
+              <span class="input-error" *ngIf="passwordForm.get('confirmPassword').hasError('pattern') &&  (!passwordForm.get('confirmPassword').hasError('minlength')) && !passwordForm.get('confirmPassword').untouched
+                ">
+                Nhập lại mật khẩu mới phải có tối thiểu 1 chữ in hoa và số!
+              </span>
+              <span class="input-error" *ngIf="confirmFlag === true">
+                Mật khẩu mới và xác nhận mật khẩu không trùng nhau
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row full-width app-modal-footer text-center btnConfirmRepass">
+      <button class="btn btn-primary mr-2" (click)="confirmChoose('ok')">
+        Đồng ý
+      </button>
+      <button class="btn btn-default btn-cancel-default" (click)="confirmChoose('cancel')">
+        Hủy
+      </button>
+    </div>
+  </form>
+</app-confirm-modal>

@@ -1,0 +1,45 @@
+app-user-edit {
+    .treeview {
+        .form-group {
+          position: relative;
+    
+          .search-icon {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+          }
+    
+          input {
+            padding-left: 30px;
+            font-size: 14px;
+          }
+        }
+      }
+}
+app-confirm-modal .app-modal .app-modal-body {
+  padding: 15px;
+  background: #fff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  margin: 15% 39%;
+  position: relative;
+  width: 35rem !important;
+}
+.user-edit-modal-body {padding: 0.5rem !important;}
+.user-edit-ico-exclamation-triangle
+{
+  font-size: x-large !important;
+  color: #ff9800;
+  margin-right: 6px;
+}
+.user-edit-modal-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center !important;
+  padding:0.75rem 0rem 0rem 0rem  ;
+}
+.user-edit-btn-default {
+  height: 35px!important;
+  font-size: 14px!important;
+}

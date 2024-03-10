@@ -1,0 +1,284 @@
+<div class="app-modal">
+   <div class="app-modal-body">
+      <div class="row header">
+         <div class="col-sm-10 title">
+            <span>QUẢN LÝ XE ĐI CÙNG</span>
+         </div>
+         <div class="col-sm-2 icon">
+            <div class="btn-remove" (click)="close()">
+               <span><i class="fa fa-close"></i></span>
+            </div>
+         </div>
+      </div>
+      <div class="app-main-content" style="background: white ;padding-top: 0px !important; min-height: 130px;">
+         <div class="app-container">
+            <div class="app-content" style="padding-top: 0px !important;">
+               <div class="card card-content" style="border: none;">
+                  <div class="card-main-content">
+                     <form name="editForm" [formGroup]="editForm" novalidate>
+                        <div class="row e-float-input lable-register" style="font-weight: bold;padding-bottom: 8px;">
+                           Danh sách xe đi cùng
+                        </div>
+                        <div class="list-grid" style="padding-bottom: 8px;">
+                           <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data_template" rowHeight="45" headerHeight="52"
+                              [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+                              [height]="configs.height()" allowResizing="true" [locale]="configs.currentLang"
+                              [allowSelection]="true" [selectionSettings]="configs.selectionSettings"
+                              (actionComplete)='onActionComplete($event)'
+                              [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+                              [allowTextWrap]="true" [textWrapSettings]="configs.wrapSettings">
+                           <e-columns>
+                              <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                              [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                              <e-column headerTextAlign="Center" textAlign="Center" headerText="STT"  width="45">
+                                 <ng-template #template let-data>
+                                    <span>{{ formatStt(data.index) }}</span>
+                                 </ng-template>
+                              </e-column>
+                              <e-column field="license_no" textAlign="Left" headerTextAlign="Center" headerText="Biển số xe" width="120">
+                              </e-column>
+                              <e-column field="vehicle_type_name" textAlign="Left" headerTextAlign="Center" headerText="Loại xe" width="100">
+                              </e-column>
+                              <e-column field="status_name" textAlign="Left" headerTextAlign="Center" headerText="Trạng thái" width="60">
+                              </e-column>
+                              <e-column field="time_in" format="dd/MM/yyyy HH:mm:ss" textAlign="Left" headerTextAlign="Center" headerText="Thời gian vào" width="100">
+                              </e-column>
+                              <e-column field="time_out" format="dd/MM/yyyy HH:mm:ss" textAlign="Left" headerTextAlign="Center" headerText="Thời gian ra" width="100">
+                              </e-column>
+                              <!-- Show view, edit, delete -->
+                              <e-column field="tools" textAlign="Left" headerTextAlign="Center" headerText="Thao tác" width="120">
+                                 <ng-template #template let-data>
+                                    <div class="row">
+                                       <div class="col-sm-12 custom-tools">
+                                          <ejs-tooltip content="Xem" target="#view"  *ngIf="checkToolbar('VIEW')">
+                                             <span id="view" (click)="clickRecord(data, 'view')" >
+                                             <i class="fa fa-eye view" aria-hidden="true"></i>
+                                             </span>
+                                          </ejs-tooltip>
+                                          <ejs-tooltip content="Sửa" target="#edit"  *ngIf="checkToolbar('EDIT') && !isDisable"
+                                          [ngClass]="flagState != 'view' ? 'enabletooltip' : 'disabledtooltip'">
+                                          <span id="edit" (click)="clickRecord(data, 'edit')">
+                                          <i class="fa fa-pencil-square-o edit" aria-hidden="true"></i>
+                                          </span>
+                                          </ejs-tooltip>
+                                          <ejs-tooltip content="Xóa" target="#delete"  *ngIf="checkToolbar('DELETE') && !isDisable"
+                                          [ngClass]="flagState != 'view' ? 'enabletooltip' : 'disabledtooltip'">
+                                          <span id="delete" (click)="clickRecord(data, 'delete')">
+                                          <i class="fa fa-trash delete" aria-hidden="true"></i>
+                                          </span>
+                                          </ejs-tooltip>
+                                       </div>
+                                    </div>
+                                 </ng-template>
+                              </e-column>
+                           </e-columns>
+                           </ejs-grid>
+                        </div>
+                        <div class="row e-float-input lable-register" style="font-weight: bold;padding-top: 8px;;padding-bottom: 12px;">
+                           Thông tin xe đi cùng
+                        </div>
+                        <div class="row">
+                           <div class="col-sm-5" style="padding: 0px;">
+                              <div class="row" style="font-weight: bold;padding-top: 8px;padding-bottom: 8px;">
+                                 <!-- Ảnh 1 của phương tiện đi cùng -->
+                                 <div class="image" style="position: relative;padding: 20px;background-color: #CCCCCC;width: 100%;">
+                                    <img id = "origin-img" *ngIf="(avatar && !isCameraOn && !isCaptured &&  !isError)  " [src]="avatar" style="width: 100%;height: 300px;" />
+                                    <img  id = "captured-photo" src="{{ src_avatar }}" style="display: none;"  style="width: 100%;height: 300px;" />
+                                    <video  id="camera-preview" [class.show]="!isCaptured" [class.hide]="isCaptured" #video  style="display: none; width: 100%;height: 300px"></video>
+                                    <span *ngIf="
+                                       (avatar || isCaptured) &&
+                                       avatar !== '/assets/images/addPicture_Vehicle.png' &&
+                                       flagStateItem != 'view'
+                                       " style="
+                                       position: absolute;
+                                       top: 0px;
+                                       cursor: pointer;
+                                       ">
+                                    </span>
+                                 </div>
+                                 <div class="custom-file mt-15" style="display: none">
+                                    <input style="font-size: 13px" #file type="file" id="avatar" accept=".png, .jpg, .jpe"
+                                    [disabled]="flagStateItem === 'view'" (change)="uploadAvatar('avatar',file.files)" style="display: none" />
+                                 </div>
+                              </div>
+                              <div class="form-group row col-sm-12" style="padding: 0px;">
+                                 <div class="col-8">
+                                 </div>
+                                 <div class="col-4" style="padding: 0px;">
+                                    <div style="text-align: right;" *ngIf="flagStateItem != 'view' && !isDisable">
+                                       <button class="capture_btn btn-action" (click)="capture()" >
+                                       <span><i class="fa fa-camera"></i></span> Chụp ảnh</button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-sm-2"></div>
+                           <div class="col-sm-5" style="padding: 0px;">
+                              <div class="row" style="font-weight: bold;padding-top: 8px;padding-bottom: 8px;">
+                                 <!-- Ảnh 2 của phương tiện đi cùng -->
+                                 <div class="image" style="position: relative;padding: 20px;background-color: #CCCCCC;width: 100%;">
+                                    <img id = "origin-img_back" *ngIf="(avatar_back && !isCameraOn_back && !isCaptured_back &&  !isError)  " [src]="avatar_back" style="width: 100%;height: 300px;" />
+                                    <img  id = "captured-photo_back" src="{{ src_avatar_back }}" style="display: none;"  style="width: 100%;height: 300px;" />
+                                    <video  id="camera-preview_back" [class.show]="!isCaptured_back" [class.hide]="isCaptured_back" #video  style="display: none; width: 100%;height: 300px"></video>
+                                    <span *ngIf="
+                                       (avatar_back || isCaptured_back) &&
+                                       avatar_back !== '/assets/images/addPicture_Vehicle.png' &&
+                                       flagStateItem != 'view'
+                                       " style="
+                                       position: absolute;
+                                       top: 0px;
+                                       cursor: pointer;
+                                       ">
+                                    </span>
+                                 </div>
+                                 <div class="custom-file mt-15" style="display: none">
+                                    <input style="font-size: 13px" #file type="file" id="avatar" accept=".png, .jpg, .jpe"
+                                    [disabled]="flagState === 'view'" (change)="uploadAvatar('avatar',file.files)" style="display: none" />
+                                 </div>
+                              </div>
+                              <div class="form-group row col-sm-12" style="padding: 0px 0px 8px 0px;">
+                                 <div class="col-8">
+                                 </div>
+                                 <div class="col-4" style="padding: 0px;">
+                                    <div style="text-align: right;" *ngIf="flagStateItem != 'view' && !isDisable">
+                                       <button class="capture_btn btn-action" (click)="capture_back()" >
+                                       <span><i class="fa fa-camera"></i></span> Chụp ảnh</button>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <!-- Thông tin  -->
+                        <div class="row" style="padding: 4px 0px 4px 0px;">
+                           <div class="col-sm-5" style="padding: 0px;">
+                              <div class="form-group row">
+                                 <div class="col-sm-3 e-float-input lable-register" style="padding: 8px 0px 0px 0px;">
+                                    <label class="required">Biển số xe</label>
+                                 </div>
+                                 <div class="col-sm-9 e-float-input" style="margin-top: 0px;padding: 0px;">
+                                    <input type="text" id="license_no" name="license_no" formControlName="license_no" [(ngModel)]="model.license_no" maxlength="255"/>
+                                    <span class="input-error" *ngIf="editForm.get('license_no').hasError('required') &&!editForm.get('license_no').untouched">
+                                    Trường biển số xe bắt buộc nhập
+                                    </span>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-sm-2"></div>
+                           <div class="col-sm-5" style="padding: 0px;" >
+                              <div class="form-group row">
+                                 <div class="col-sm-3 e-float-input lable-register" style="padding: 8px 0px 0px 0px;">
+                                    <label class="required">Loại xe</label>
+                                 </div>
+                                 <div class="col-sm-9 e-float-input" style="margin-top: 0px;padding: 0px;">
+                                    <ejs-dropdownlist id="vehicle_type" [dataSource]="lstVehicleType"
+                                    [fields]="fields" [showClearButton]="true"  [(ngModel)]="model.vehicle_type"
+                                    formControlName="vehicle_type" [allowFiltering]="true">
+                                    </ejs-dropdownlist>
+                                    <span class="input-error" *ngIf="editForm.get('vehicle_type').hasError('required') &&!editForm.get('vehicle_type').untouched">
+                                    Trường loại xe bắt buộc nhập
+                                    </span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row" style="padding: 4px 0px 4px 0px;">
+                           <div class="col-sm-5" style="padding: 0px;">
+                              <div class="form-group row">
+                                 <div class="col-sm-3 e-float-input lable-register" style="padding: 8px 0px 0px 0px;">
+                                    <label >Màu xe</label>
+                                 </div>
+                                 <div class="col-sm-9 e-float-input" style="margin-top: 0px;padding: 0px;">
+                                    <input type="text" id="vehicle_color" name="vehicle_color" formControlName="vehicle_color" [(ngModel)]="model.vehicle_color" maxlength="255"/>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-sm-2"></div>
+                           <div class="col-sm-5" style="padding: 0px;">
+                              <div class="form-group row">
+                                 <div class="col-sm-3 e-float-input lable-register" style="padding: 8px 0px 0px 0px;">
+                                    <label >Trạng thái</label>
+                                 </div>
+                                 <div class="col-sm-9 e-float-input" style="margin-top: 0px;padding: 0px;">
+                                    <ejs-dropdownlist id="status" [dataSource]="lstStatus"
+                                    [fields]="fields" [showClearButton]="true"  [(ngModel)]="model.status"
+                                    formControlName="status" [allowFiltering]="true">
+                                    </ejs-dropdownlist>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="row" style="padding: 4px 0px 4px 0px;">
+                           <div class="col-sm-5" style="padding: 0px;">
+                              <div class="form-group row">
+                                 <div class="col-sm-3 e-float-input lable-register" style="padding: 8px 0px 0px 0px;">
+                                    <label >Thời gian vào</label>
+                                 </div>
+                                 <div class="col-sm-9 e-float-input" style="margin-top: 0px;padding: 0px;">
+                                    <ejs-datetimepicker id="time_in" name="time_in" formControlName="time_in"
+                                    placeholder=".../.../..." aria-placeholder=".../.../..."
+                                    [(ngModel)]="model.time_in" format="dd/MM/yyyy HH:mm:ss" (blur)="onDateBlur()">
+                                    </ejs-datetimepicker>
+                                    <span class="input-error" *ngIf="!isValidDate">Trường Thời gian vào phải nhỏ hơn hoặc bằng thời gian ra!</span>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="col-sm-2"></div>
+                           <div class="col-sm-5" style="padding: 0px;">
+                              <div class="form-group row">
+                                 <div class="col-sm-3 e-float-input lable-register" style="padding: 8px 0px 0px 0px;">
+                                    <label >Thời gian ra</label>
+                                 </div>
+                                 <div class="col-sm-9 e-float-input" style="margin-top: 0px;padding: 0px;">
+                                    <ejs-datetimepicker id="time_out" name="time_out" formControlName="time_out"
+                                    placeholder=".../.../..." aria-placeholder=".../.../..."
+                                    [(ngModel)]="model.time_out" format="dd/MM/yyyy HH:mm:ss" (blur)="onDateBlur()">
+                                    </ejs-datetimepicker>
+                                    <span class="input-error" *ngIf="!isValidDate">
+                                    Trường Thời gian ra phải nhỏ hơn hoặc bằng thời gian vào!
+                                    </span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+               <div class="modal-footer">
+                  <div class="col-sm-12 text-right mt-3" style="padding: 60px 0px 0px 0px;">
+                     <button class="back__btn" (click)="closeData()" *ngIf="flagStateItem != 'view' && !isDisable">Hủy</button>
+                     <button class="save__btn" style="margin-right: 10px;" (click)="saveData()" *ngIf="flagStateItem != 'view' && !isDisable">{{ItemButtonText}} </button>
+                     <button class="save__btn" (click)="sendData()" *ngIf="flagStateItem != 'view' && !isDisable">Lưu thông tin</button>
+                     <button class="back__btn" (click)="close()" *ngIf="flagStateItem == 'view' || isDisable" style="margin-right: 0px !important;">Quay lại</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <ng-content></ng-content>
+</div>
+<div class="app-modal-background"></div>
+<!-- CONFIRM DELETE ONE MODAL-->
+<app-confirm-modal id="confirm-delete-v-one-modal" *ngIf="isShowDeleteModal"   class="modal">
+   <div class="modal-body accompanying-vehicle-manage-modals-modal-body">
+     <span class="accompanying-vehicle-manage-modals-ico-exclamation-triangle"><i class="fa fa-exclamation-triangle"></i>
+     </span>  
+     <span style="font-size: 14px;">&nbsp;Bạn có chắc chắn muốn xóa xe đi cùng <b style="color:red">
+         {{ modelDelete && modelDelete.license_no ? modelDelete.license_no : ""}}</b>&nbsp;này không?
+     </span> 
+   </div>
+   <div class="modal-footer accompanying-vehicle-manage-modals-modal-footer">
+     <button class="btn btn-primary m-r-8 accompanying-vehicle-manage-modals-btn-default" (click)="confirmDeleteOne('ok')">
+       Đồng ý
+     </button>
+     <button class="btn btn-default accompanying-vehicle-manage-modals-btn-default" (click)="confirmDeleteOne('cancel')">
+       Hủy
+     </button>
+   </div>
+ </app-confirm-modal>
+  
+ 
+ 
+ 
+ 
+ 

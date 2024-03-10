@@ -1,0 +1,135 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI XÃ/PHƯỜNG</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">SỬA XÃ/PHƯỜNG</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">XEM XÃ/PHƯỜNG</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <!-- <div class="col-sm-2 text-center flex-img-center">
+                <div class="image" style="position: relative">
+                  <img style="width: 150px; height: 150px" class="full-width" alt="addPicture" [src]="avatar"
+                    onclick="javascript:document.getElementById('avatar').click();" />
+                  <span *ngIf="
+                      avatar &&
+                      avatar !== '/assets/images/addPicture.png' &&
+                      flagState != 'view'
+                    " style="
+                      position: absolute;
+                      top: 0px;
+                      cursor: pointer;
+                    "><i class="fa fa-remove" (click)="removeImage('avatar')"></i></span>
+                  <label class="e-float-text" style="position: relative; top: 50px !important" for="">Ảnh đại
+                    diện</label>
+                </div>
+                <div class="custom-file mt-15" style="display: none">
+                  <input style="font-size: 13px" #file type="file" id="avatar" accept=".png, .jpg, .jpe"
+                    [disabled]="flagState === 'view'" (change)="uploadAvatar(file.files)" style="display: none" />
+                </div>
+              </div> -->
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Mã -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="code" name="code" formControlName="code" [(ngModel)]="model.code"
+                          readonly />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="code">Mã xã/phường</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Tên -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="name" name="name" formControlName="name" [(ngModel)]="model.name" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="name">Tên xã/phường</label>
+                        <span class="input-error" *ngIf="
+            editForm.get('name').hasError('required') &&
+            !editForm.get('name').untouched
+          ">
+                          Trường Tên xã/phường bắt buộc nhập
+                        </span>
+                        <span class="input-error" *ngIf="
+            editForm.get('name').hasError('maxlength') &&
+            !editForm.get('name').untouched
+          ">
+                          Tên xã/phường không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Tỉnh/Thành phố -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="province_id" [dataSource]="lstProvinces" [fields]="fields"
+                          [(ngModel)]="model.province_id" [placeholder]="" formControlName="province_id"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstProvinces)"
+                          [showClearButton]="true" placeholder="Chọn giá trị" (change)="changeProvince($event)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="province_id">Chọn Tỉnh/Thành phố</label>
+                        <span class="input-error" *ngIf="
+            editForm.get('province_id').hasError('required') &&
+            !editForm.get('province_id').untouched
+          ">
+                          Trường Tỉnh/Thành phố bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Quận/Huyện -->
+                  <div class="col-sm-6">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="district_id" [dataSource]="lstDistricts" [fields]="fields"
+                          [(ngModel)]="model.district_id" [placeholder]="" formControlName="district_id"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstDistricts)"
+                          [showClearButton]="true" placeholder="Chọn giá trị">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="district_id">Chọn Quận/Huyện</label>
+                        <span class="input-error" *ngIf="
+            editForm.get('district_id').hasError('required') &&
+            !editForm.get('district_id').untouched
+          ">
+                          Trường Quận/Huyện bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Ghi chú -->
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <textarea type="text" id="description" name="description" formControlName="description"
+                          [(ngModel)]="model.description" rows="3"></textarea>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="description">Ghi chú</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

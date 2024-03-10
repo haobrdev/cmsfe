@@ -1,0 +1,117 @@
+<div class="app-main-content">
+    <div class="app-container">
+      <div class="app-toolbar">
+        <div class="card card-content">
+          <div class="card-main-header">
+            <img src="/assets/images/list-icon.png" />
+            <span class="card-main-title">THỐNG KÊ THẺ DÙNG Ở TRONG CƠ QUAN</span>
+          </div>
+           <div class="row full-width">
+            <h5 class="title">Tìm kiếm</h5>
+            <div class="card card-content-design">
+              <div class="main-toolbar">
+                <div class="row">
+                  <div class="col-sm-12 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+  
+                    <div class="col-sm-3">
+                        <div class="e-float-input">
+                            <ejs-dropdownlist id="card_type" [dataSource]="lstTypeCard" [fields]="fields" 
+                                [(ngModel)]="search.card_type" placeholder="Thẻ nhân viên" (ngModelChange)="changeModel()"
+                                [showClearButton]="true" [allowFiltering]="true">
+                            </ejs-dropdownlist>
+                            <label class="e-float-text" for="card_type">Loại thẻ</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="e-float-input">
+                            <ejs-dropdownlist id="department" [dataSource]="lstOrganization" [fields]="fields" 
+                                [(ngModel)]="search.department" placeholder="Phòng ban" (ngModelChange)="changeModel()"
+                                [showClearButton]="true" [allowFiltering]="true">
+                            </ejs-dropdownlist>
+                            <label class="e-float-text" for="department">Phòng ban</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="e-float-input">
+                            <ejs-dropdownlist id="status" [dataSource]="lstStatus" [fields]="fields" 
+                                [(ngModel)]="search.status" placeholder="Chưa sử dụng" (ngModelChange)="changeModel()"
+                                [showClearButton]="true" [allowFiltering]="true">
+                            </ejs-dropdownlist>
+                            <label class="e-float-text" for="department">Trạng thái thẻ</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 ">
+                      <div class="col-sm-12  custom-btn-toolbar">
+                        <!-- Button Search -->
+                        <div class="col-sm-7"></div>
+                        <div class="col-sm-5  ml-auto">
+                          <div class="form-group">
+                          <div class="e-float-input  bg">
+                              <button class="btn btn-search" (click)="getListData()">
+                              Tìm kiếm
+                              </button>
+                          </div>
+                      </div>
+                      </div>
+                    </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+          <div class="row full-width">
+            <div class="col-sm-12 main-toolbar">
+              <button id="export_excel" class="btn-action btn btn-action btn-blue" (click)="exportData()"
+                *ngFor="let itemButton of toolbar" [disabled]="itemButton.isDisable === true">
+                <span><i class="fa {{ itemButton.prefixIcon }}"></i></span>
+                <span class="text-center">{{ itemButton.text }}</span>
+              </button>
+            </div>
+          </div>
+            <div class="card-main-content">
+            <div class="list-grid">
+              <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+                [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+                [height]="configs.height()" [allowSorting]="false" allowResizing="true" [locale]="configs.currentLang"
+                [allowSelection]="true" [showColumnChooser]="false" [selectionSettings]="configs.selectionSettings"
+                [allowFiltering]="false" (dataStateChange)="dataStateChange($event)"
+                [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+                (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)" [allowTextWrap]="true"
+                [textWrapSettings]="configs.wrapSettings">
+                <e-columns>
+                  <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                    [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                  <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                    width="20">
+                    <ng-template #template let-data>
+                      <span>{{ formatStt(data.index) }}</span>
+                    </ng-template>
+                  </e-column>
+                  <e-column field="card_id" textAlign="Left" headerTextAlign="Center" headerText="Mã thẻ" width="50">
+                  </e-column>
+                  <e-column field="card_type_name" textAlign="Left" headerTextAlign="Center" headerText="Loại thẻ"
+                    width="50">
+                  </e-column>
+                  <e-column field="number_card" textAlign="Right" headerTextAlign="Center" headerText="Số lượng"
+                    width="50">
+                  </e-column>
+                  <e-column field="card_user_name" textAlign="Left"  headerTextAlign="Center"
+                    headerText="Người sử dụng" width="80">
+                  </e-column>
+
+                  <e-column field="department_name" textAlign="Left"  headerTextAlign="Center"
+                    headerText="Phòng ban" width="80">
+                  </e-column>
+                  <e-column field="status_name" textAlign="Left"  headerTextAlign="Center"
+                    headerText="Trạng thái" width="50">
+                  </e-column>
+                </e-columns>
+              </ejs-grid>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ 

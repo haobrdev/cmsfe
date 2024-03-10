@@ -1,0 +1,216 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-toolbar">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/list-icon.png" />
+          <span class="card-main-title">THỐNG KÊ XE RA VÀO CƠ QUAN</span>
+        </div>
+        <div class="row full-width">
+          <h5 class="title">Tìm kiếm</h5>
+          <div class="card card-content-design">
+            <div class="main-toolbar">
+              <div class="row">
+                <div class="col-sm-12 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+                  <div class="col-sm-4">
+                    <div class="e-float-input">
+                      <ejs-dropdownlist id="checkpoint" [dataSource]="lstCheckpoints" [fields]="fields" 
+                        [(ngModel)]="search.checkpoint" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                        [allowFiltering]="true" (filtering)="onFiltering($event, lstCheckpoints)" [showClearButton]="true"
+                        placeholder="Chọn trạm kiểm soát" (ngModelChange)="
+                                changeModel('checkpoint')
+                              ">
+                      </ejs-dropdownlist>
+                      <label class="e-float-text" for="checkpoint">Trạm kiểm soát</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="port" [dataSource]="lstPorts" [fields]="fields" 
+                          [(ngModel)]="search.port" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstPorts)" [showClearButton]="true"
+                          placeholder="Chọn cổng" (ngModelChange)="
+                                  changeModel('port')
+                                ">
+                        </ejs-dropdownlist>
+                        <label class="e-float-text" for="port">Cổng</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="lane" [dataSource]="lstLanes" [fields]="fields" 
+                          [(ngModel)]="search.lane" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstLanes)" [showClearButton]="true"
+                          placeholder="Chọn làn" (ngModelChange)="
+                                  changeModel('lane')
+                                ">
+                        </ejs-dropdownlist>
+                        <label class="e-float-text" for="port">Làn</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+                    <div class="col-sm-4">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="range_of_vehicle" [dataSource]="lstVehicles" [fields]="fields" 
+                          [(ngModel)]="search.range_of_vehicle" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstVehicles)" [showClearButton]="true"
+                          placeholder="Chọn loại phương tiện" (ngModelChange)="
+                                  changeModel('range_of_vehicle')
+                                ">
+                        </ejs-dropdownlist>
+                        <label class="e-float-text" for="range_of_vehicle">Loại phương tiện</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="license_type" [dataSource]="lstLicenseTypes" [fields]="fields" 
+                          [(ngModel)]="search.license_type" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstLicenseTypes)" [showClearButton]="true"
+                          placeholder="Loại biển" (ngModelChange)="
+                                  changeModel('search.license_type')
+                                ">
+                        </ejs-dropdownlist>
+                        <label class="e-float-text" for="license_type">Loại biển</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="employee_type" [dataSource]="lstEmployees" [fields]="fields" 
+                          [(ngModel)]="search.employee_type" [placeholder]="" [ngModelOptions]="{ standalone: true }"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstEmployees)" [showClearButton]="true"
+                          placeholder="Nhân viên" (ngModelChange)="
+                                  changeModel('employee_type')
+                                ">
+                        </ejs-dropdownlist>
+                        <label class="e-float-text" for="employee_type">Loại</label>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="col-sm-12 p-n custom-btn-toolbar" style="padding-right: 5px !important">
+                    <div class="col-sm-4">
+                        <div class="e-float-input">
+                        <input class="searchText" type="text" id="text" name="text" [placeholder]="'Nhập biển số xe'"
+                            [(ngModel)]="search.license_no" [ngModelOptions]="{ standalone: true }"
+                            (keypress)="searchListEnter($event)" />
+                            <label class="e-float-text" for="text">Biển số xe</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <div class="e-float-input">
+                        <ejs-datepicker id="start_date" name="start_date"
+                            [(ngModel)]="search.start_date" format="dd/MM/yyyy" placeholder=".../.../..." aria-placeholder=".../.../..." (keypress)="searchListEnter($event)" (change)="onDateChange()"></ejs-datepicker>
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text" for="start_date">Từ ngày</label>
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <div class="e-float-input">
+                        <ejs-datepicker id="end_date" name="end_date"
+                            [(ngModel)]="search.end_date" format="dd/MM/yyyy" placeholder=".../.../..." aria-placeholder=".../.../..." (keypress)="searchListEnter($event)" (change)="onDateChange()"></ejs-datepicker>
+                          <span class="e-float-line"></span>
+                          <label class="e-float-text" for="end_date">Đến ngày</label>
+                      </div>
+                      <span class="input-error" *ngIf="isError">
+                        Từ ngày phải nhỏ hơn Đến ngày!
+                      </span>
+                    </div>
+                    <div class="col-sm-2">
+                       <!-- Button Search -->
+                      <div class="col-sm-6 ml-auto"  style="padding-right: 0px !important;">
+                        <div class="form-group">
+                          <div class="e-float-input bg">
+                            <button class="btn btn-search" (click)="getListData()">
+                              Tìm kiếm
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+          </div>
+        </div>
+        <div class="row full-width">
+          <div class="col-sm-12 main-toolbar">
+            <button id="export_excel" class="btn-action btn btn-action btn-blue" (click)="exportData()"
+              *ngFor="let itemButton of toolbar" [disabled]="itemButton.isDisable === true">
+              <span><i class="fa {{ itemButton.prefixIcon }}"></i></span>
+              <span class="text-center">{{ itemButton.text }}</span>
+            </button>
+          </div>
+        </div>
+        <div class="card-main-content">
+          <div class="list-grid">
+            <ejs-grid #overviewgrid id="overviewgrid" [dataSource]="data | async" rowHeight="45" headerHeight="52"
+              [allowPaging]="true" [pageSettings]="configs.pageSettings" [enableHover]="true"
+              [height]="configs.height()" [allowSorting]="false" allowResizing="true" [locale]="configs.currentLang"
+              [allowSelection]="true" [showColumnChooser]="false" [selectionSettings]="configs.selectionSettings"
+              [allowFiltering]="false" (dataStateChange)="dataStateChange($event)"
+              [filterSettings]="configs.filterSettings" [editSettings]="configs.editSettings"
+              (rowSelecting)="setButtonStatus($event)" (rowDeselecting)="setButtonStatus($event)" [allowTextWrap]="true"
+              [textWrapSettings]="configs.wrapSettings">
+              <e-columns>
+                <e-column field="id" [showInColumnChooser]="false" [visible]="false" headerText="ID" width="130"
+                  [isPrimaryKey]="true" [allowEditing]="false"></e-column>
+                <e-column headerTextAlign="Center" textAlign="Center" headerText="STT" [allowEditing]="false"
+                  width="20">
+                  <ng-template #template let-data>
+                    <span>{{ formatStt(data.index) }}</span>
+                  </ng-template>
+                </e-column>
+                <e-column field="checkpoint_name" textAlign="Left" headerTextAlign="Center" headerText="Trạm kiểm soát" width="50">
+                </e-column>
+                <e-column field="port" textAlign="Left" headerTextAlign="Center" headerText="Cổng"
+                  width="50">
+                </e-column>
+                <e-column field="lane_name" textAlign="Left"  headerTextAlign="Center"
+                  headerText="Làn" width="50">
+                </e-column>
+                <e-column field="time_in_tostring" textAlign="Center"  headerTextAlign="Center"
+                  headerText="Thời gian vào" width="50">
+                </e-column>
+                <e-column field="time_out_tostring" textAlign="Center"  headerTextAlign="Center"
+                  headerText="Thời gian ra" width="50">
+                </e-column>
+                <e-column field="license_no" textAlign="Left"  headerTextAlign="Center"
+                  headerText="Biển số xe" width="50">
+                </e-column>
+                <e-column field="employee_type_name" textAlign="Left"  headerTextAlign="Center"
+                  headerText="Loại" width="50">
+                </e-column>
+                <e-column field="vehicle_name" textAlign="Left"  headerTextAlign="Center"
+                  headerText="Loại phương tiện" width="50">
+                </e-column>
+                <e-column field="license_type_name" textAlign="Left"  headerTextAlign="Center"
+                  headerText="Loại biển" width="50">
+                </e-column>
+                <e-column field="full_name" textAlign="Left"  headerTextAlign="Center"
+                  headerText="Người vào/ ra" width="50">
+                </e-column>
+              </e-columns>
+            </ejs-grid>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- CONFIRM DELETE ONE MODAL-->
+<app-confirm-modal id="confirm-delete-one-modal">
+  <div class="row full-width app-modal-header">
+    <span style="color: red;margin-right: 6px;"><i class="fa fa-exclamation-triangle"></i>
+    </span>Bạn có chắc chắn muốn xóa Chức vụ <b style="color:red">
+      {{ modelDelete && modelDelete.name ? modelDelete.name : ""}}</b> này không?
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmDeleteOne('ok')">
+      Đồng ý
+    </button>
+    <button class="btn btn-default" (click)="confirmDeleteOne('cancel')">
+      Hủy
+    </button>
+  </div>
+</app-confirm-modal>

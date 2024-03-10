@@ -1,0 +1,159 @@
+<div class="app-main-content">
+  <div class="app-container">
+    <div class="app-content">
+      <div class="card card-content">
+        <div class="card-main-header">
+          <img src="/assets/images/plus.png" />
+          <span class="card-main-title" *ngIf="flagState === 'new'">THÊM MỚI ĐƠN VỊ/PHÒNG BAN</span>
+          <span class="card-main-title" *ngIf="flagState === 'edit'">SỬA ĐƠN VỊ/PHÒNG BAN</span>
+          <span class="card-main-title" *ngIf="flagState === 'view'">XEM ĐƠN VỊ/PHÒNG BAN</span>
+        </div>
+        <div class="card-main-content">
+          <form name="editForm" [formGroup]="editForm" novalidate>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="row">
+                  <!-- Tên -->
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="name" name="name" formControlName="name" [(ngModel)]="model.name" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="name">Tên đơn vị/phòng ban</label>
+                        <span class="input-error"
+                          *ngIf="editForm.get('name').hasError('required') &&!editForm.get('name').untouched">
+                          Trường Tên đơn vị/phòng ban bắt buộc nhập
+                        </span>
+                        <span class="input-error"
+                          *ngIf="editForm.get('name').hasError('maxlength') && !editForm.get('name').untouched">
+                          Tên đơn vị/phòng ban không được vượt quá 255 ký tự
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="name_en" name="name_en" formControlName="name_en"
+                          [(ngModel)]="model.name_en" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="name_en">Tên tiếng anh</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="name_short" name="name_short" formControlName="name_short"
+                          [(ngModel)]="model.name_short" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="name_short">Tên viết tắt</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <input type="text" id="name_compact" name="name_compact" formControlName="name_compact"
+                          [(ngModel)]="model.name_compact" />
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="name_compact">Tên rút gọn</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <!-- <ejs-dropdownlist id="parent_id" [dataSource]="lstOrgs" [fields]="fields"
+                          [(ngModel)]="model.parent_id" [placeholder]="" formControlName="parent_id" [allowFiltering]="true"
+                          (filtering)="onFiltering($event, lstOrgs)" [showClearButton]="true"
+                          placeholder="Chọn giá trị" (change)="changeOrg($event)">
+                        </ejs-dropdownlist> -->
+                        <ejs-dropdownlist id='parent_id' #orgDroplist (open)='onOpenChooseOrg()' formControlName="parent_id"
+                          title="{{ model && model.parent_name ? model.parent_name : '' }}">
+                          <ng-template #noRecordsTemplate>
+                            <div id='tree'></div>
+                          </ng-template>
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text required" for="parent_id">Thuộc đơn vị/Phòng ban</label>
+                        <span class="input-error" *ngIf="
+            editForm.get('parent_id').hasError('required') &&
+            !editForm.get('parent_id').untouched
+          ">
+                          Trường Thuộc đơn vị/Phòng ban bắt buộc nhập
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-checkbox label="Là đơn vị" [checked]="model.is_org" [(ngModel)]="model.is_org"
+                          formControlName="is_org" (change)="changeIsOrg()">
+                        </ejs-checkbox>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4" *ngIf="model && model.is_org">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-dropdownlist id="org_level" [dataSource]="lstOrgLevels" [fields]="fields"
+                          [(ngModel)]="model.org_level" [placeholder]="" formControlName="org_level"
+                          [allowFiltering]="true" (filtering)="onFiltering($event, lstOrgLevels)"
+                          [showClearButton]="true" placeholder="Chọn cấp đơn vị" (change)="changeOrgLevel($event)">
+                        </ejs-dropdownlist>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="org_level">Cấp đơn vị</label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <ejs-numerictextbox [locale]="'en'" min="1" id="orders" formControlName="orders"
+                          [(ngModel)]="model.orders" maxlength="15" decimals="0" validateDecimalOnType="true"
+                          format="N0">
+                        </ejs-numerictextbox>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="orders">Thứ tự hiển thị</label>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Ghi chú -->
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <div class="e-float-input">
+                        <textarea type="text" id="description" name="description" formControlName="description"
+                          [(ngModel)]="model.description" rows="3"></textarea>
+                        <span class="e-float-line"></span>
+                        <label class="e-float-text" for="description">Mô tả</label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-12 text-right mt-3" *ngIf="flagState != 'view'">
+                <button class="back__btn" (click)="back()">Quay lại</button>
+                <button class="save__btn" (click)="saveData()" *ngIf="flagState !== 'view'">Lưu thông tin</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM BACK MODAL-->
+<app-confirm-modal id="confirm-back-modal">
+  <div class="row full-width app-modal-header">
+    Thay đổi chưa lưu của bạn sẽ biến mất nếu bạn rời khỏi trang.
+  </div>
+  <div class="row full-width app-modal-footer text-center">
+    <button class="btn btn-primary m-r-8" (click)="confirmBack('ok')">Đồng ý</button>
+    <button class="btn btn-default" (click)="confirmBack('cancel')">Hủy</button>
+  </div>
+</app-confirm-modal>
